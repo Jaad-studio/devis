@@ -1,4 +1,4 @@
-     <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
@@ -23,9 +23,10 @@
 
         body { 
             font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif; 
+            -webkit-tap-highlight-color: transparent;
         }
         
-        .custom-scrollbar::-webkit-scrollbar { width: 4px; }
+        .custom-scrollbar::-webkit-scrollbar { width: 4px; height: 4px; }
         .custom-scrollbar::-webkit-scrollbar-thumb { background: #E2E8F0; border-radius: 4px; }
         
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
@@ -45,13 +46,22 @@
         .selected-ring {
             box-shadow: 0 0 0 2px #3B66F5;
         }
+
+        /* Amélioration du défilement du stepper sur mobile */
+        .stepper-container {
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+        .stepper-container::-webkit-scrollbar {
+            display: none;
+        }
     </style>
 </head>
 <body class="bg-[#F9FBFF]">
     <div id="root"></div>
 
     <script type="text/babel">
-        const { useState, useMemo, useEffect } = React;
+        const { useState, useMemo, useEffect, useRef } = React;
 
         const JAAD_BLUE = "#3B66F5";
 
@@ -78,11 +88,12 @@
                 Send: '<path d="m22 2-7 20-4-9-9-4Z" /><path d="M22 2 11 13" />',
                 Loader2: '<path d="M21 12a9 9 0 1 1-6.219-8.56" />',
                 XCircle: '<circle cx="12" cy="12" r="10" /><path d="m15 9-6 6" /><path d="m9 9 6 6" />',
-                RotateCcw: '<path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" /><path d="M3 3v5h5" />'
+                RotateCcw: '<path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" /><path d="M3 3v5h5" />',
+                TrendingUp: '<polyline points="23 6 13.5 15.5 8.5 10.5 1 18" /><polyline points="17 6 23 6 23 12" />'
             };
 
             return (
-                <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className={className} dangerouslySetInnerHTML={{ __html: icons[name] }} />
+                <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className={className} dangerouslySetInnerHTML={{ __html: icons[name] || icons.Check }} />
             );
         };
 
@@ -177,9 +188,22 @@
             
             const [clientInfo, setClientInfo] = useState({ company: '', email: '', phone: '', brief: '' });
 
+            const stepperRef = useRef(null);
+
             // LOGIQUE DE SCROLL AUTOMATIQUE AU CHANGEMENT D'ETAPE
             useEffect(() => {
                 window.scrollTo({ top: 0, behavior: 'smooth' });
+                
+                // Centrer l'étape active sur mobile
+                if (stepperRef.current) {
+                    const activeStep = stepperRef.current.children[currentStep * 2];
+                    if (activeStep) {
+                        stepperRef.current.scrollTo({
+                            left: activeStep.offsetLeft - (stepperRef.current.offsetWidth / 2) + (activeStep.offsetWidth / 2),
+                            behavior: 'smooth'
+                        });
+                    }
+                }
             }, [currentStep, showSummary]);
 
             const formatPrice = (price) => new Intl.NumberFormat('fr-FR').format(price);
@@ -291,106 +315,107 @@
             };
 
             return (
-                <div className="min-h-screen text-[#1A1F36] selection:bg-blue-100 pb-40">
-                    <header className="px-6 py-6 lg:py-8 flex justify-between items-center bg-white/80 backdrop-blur-md border-b border-slate-100 sticky top-0 z-50">
-                        <span className="text-2xl lg:text-3xl font-black tracking-tighter uppercase flex items-baseline" style={{ color: JAAD_BLUE }}>
+                <div className="min-h-screen text-[#1A1F36] selection:bg-blue-100 pb-32 sm:pb-40">
+                    <header className="px-4 py-4 sm:px-6 sm:py-6 lg:py-8 flex justify-between items-center bg-white/80 backdrop-blur-md border-b border-slate-100 sticky top-0 z-50">
+                        <span className="text-xl sm:text-2xl lg:text-3xl font-black tracking-tighter uppercase flex items-baseline" style={{ color: JAAD_BLUE }}>
                             JAAD<span className="text-slate-900 ml-0.5">.</span>
                         </span>
-                        <div className="text-right hidden sm:block">
-                            <p className="text-[9px] uppercase font-black text-slate-400 tracking-[0.2em]">Estimation</p>
-                            <div className="text-xl font-extrabold text-[#1A1F36]">
+                        <div className="text-right">
+                            <p className="text-[8px] sm:text-[9px] uppercase font-black text-slate-400 tracking-[0.2em]">Estimation</p>
+                            <div className="text-lg sm:text-xl font-extrabold text-[#1A1F36]">
                                 <AnimatedNumber value={totals.oneTime + totals.monthly} />
                             </div>
                         </div>
                     </header>
 
-                    <main className="max-w-5xl mx-auto p-4 lg:p-6 pt-12">
+                    <main className="max-w-5xl mx-auto p-4 sm:p-6 pt-8 sm:pt-12">
                         {!showSummary ? (
-                            <div className="space-y-12 animate-in fade-in duration-700 pb-10">
-                                <div className="flex justify-between items-center max-w-2xl mx-auto mb-16 overflow-x-auto lg:overflow-visible pb-4 px-2">
+                            <div className="space-y-8 sm:space-y-12 animate-in fade-in duration-700 pb-10">
+                                {/* Stepper responsive */}
+                                <div ref={stepperRef} className="stepper-container flex justify-between items-center max-w-2xl mx-auto mb-8 sm:mb-16 overflow-x-auto pb-4 px-2 snap-x">
                                     {STEPS.map((s, idx) => (
                                         <React.Fragment key={s.id}>
-                                            <div className={`flex flex-col items-center gap-2 min-w-max ${idx <= currentStep ? 'cursor-pointer' : 'opacity-30'}`} onClick={() => navigateToStep(idx)}>
-                                                <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm transition-all duration-500 ${idx <= currentStep ? 'bg-blue-600 text-white shadow-lg shadow-blue-200' : 'bg-slate-100 text-slate-400'}`}>
-                                                    {idx < currentStep ? <Icon name="Check" size={16} /> : `0${idx + 1}`}
+                                            <div className={`flex flex-col items-center gap-2 min-w-max snap-center ${idx <= currentStep ? 'cursor-pointer' : 'opacity-30'}`} onClick={() => navigateToStep(idx)}>
+                                                <div className={`w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center font-bold text-xs sm:text-sm transition-all duration-500 ${idx <= currentStep ? 'bg-blue-600 text-white shadow-lg shadow-blue-200' : 'bg-slate-100 text-slate-400'}`}>
+                                                    {idx < currentStep ? <Icon name="Check" size={14} /> : `0${idx + 1}`}
                                                 </div>
-                                                <span className={`text-[9px] uppercase tracking-widest font-extrabold ${idx === currentStep ? 'text-blue-600' : 'text-slate-400'}`}>{s.label}</span>
+                                                <span className={`text-[8px] sm:text-[9px] uppercase tracking-widest font-extrabold ${idx === currentStep ? 'text-blue-600' : 'text-slate-400'}`}>{s.label}</span>
                                             </div>
-                                            {idx < STEPS.length - 1 && <div className={`h-[2px] w-8 lg:flex-1 rounded-full ${idx < currentStep ? 'bg-blue-600' : 'bg-slate-100'}`} />}
+                                            {idx < STEPS.length - 1 && <div className={`h-[2px] w-6 sm:w-8 lg:flex-1 rounded-full shrink-0 ${idx < currentStep ? 'bg-blue-600' : 'bg-slate-100'}`} />}
                                         </React.Fragment>
                                     ))}
                                 </div>
 
-                                <div className="text-center space-y-4">
-                                    <h1 className="text-4xl md:text-7xl font-black tracking-tighter text-slate-900 uppercase leading-none">{STEPS[currentStep]?.title}</h1>
-                                    <p className="text-slate-500 text-sm lg:text-lg max-w-xl mx-auto font-medium">{STEPS[currentStep]?.description}</p>
+                                <div className="text-center space-y-3 sm:space-y-4 px-2">
+                                    <h1 className="text-3xl sm:text-5xl md:text-7xl font-black tracking-tighter text-slate-900 uppercase leading-none break-words">{STEPS[currentStep]?.title}</h1>
+                                    <p className="text-slate-500 text-xs sm:text-sm lg:text-lg max-w-xl mx-auto font-medium leading-relaxed">{STEPS[currentStep]?.description}</p>
                                 </div>
 
                                 {STEPS[currentStep].isContactStep && (
-                                    <div className="max-w-md mx-auto bg-white p-10 rounded-[2.5rem] card-shadow border border-white space-y-6">
-                                        <div className="space-y-4">
+                                    <div className="max-w-md mx-auto bg-white p-6 sm:p-10 rounded-[2rem] sm:rounded-[2.5rem] card-shadow border border-white space-y-4 sm:space-y-6">
+                                        <div className="space-y-3 sm:space-y-4">
                                             <div className="relative group">
-                                                <Icon name="Building2" className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-300 group-focus-within:text-blue-500 transition-colors" size={18} />
-                                                <input type="text" placeholder="ENTREPRISE *" value={clientInfo.company} onChange={(e) => setClientInfo({...clientInfo, company: e.target.value})} className="w-full bg-slate-50 rounded-2xl px-12 py-5 text-[11px] font-bold tracking-widest uppercase outline-none focus:bg-white focus:ring-4 ring-blue-50 transition-all border border-transparent focus:border-blue-100" />
+                                                <Icon name="Building2" className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-300 group-focus-within:text-blue-500 transition-colors" size={16} />
+                                                <input type="text" placeholder="ENTREPRISE *" value={clientInfo.company} onChange={(e) => setClientInfo({...clientInfo, company: e.target.value})} className="w-full bg-slate-50 rounded-xl sm:rounded-2xl px-12 py-4 sm:py-5 text-[10px] sm:text-[11px] font-bold tracking-widest uppercase outline-none focus:bg-white focus:ring-4 ring-blue-50 transition-all border border-transparent focus:border-blue-100" />
                                             </div>
                                             <div className="relative group">
-                                                <Icon name="Mail" className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-300 group-focus-within:text-blue-500 transition-colors" size={18} />
-                                                <input type="email" placeholder="EMAIL DE CONTACT *" value={clientInfo.email} onChange={(e) => setClientInfo({...clientInfo, email: e.target.value})} className="w-full bg-slate-50 rounded-2xl px-12 py-5 text-[11px] font-bold tracking-widest uppercase outline-none focus:bg-white focus:ring-4 ring-blue-50 transition-all border border-transparent focus:border-blue-100" />
+                                                <Icon name="Mail" className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-300 group-focus-within:text-blue-500 transition-colors" size={16} />
+                                                <input type="email" placeholder="EMAIL DE CONTACT *" value={clientInfo.email} onChange={(e) => setClientInfo({...clientInfo, email: e.target.value})} className="w-full bg-slate-50 rounded-xl sm:rounded-2xl px-12 py-4 sm:py-5 text-[10px] sm:text-[11px] font-bold tracking-widest uppercase outline-none focus:bg-white focus:ring-4 ring-blue-50 transition-all border border-transparent focus:border-blue-100" />
                                             </div>
                                             <div className="relative group">
-                                                <Icon name="Phone" className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-300 group-focus-within:text-blue-500 transition-colors" size={18} />
-                                                <input type="tel" placeholder="TÉLÉPHONE (OPTIONNEL)" value={clientInfo.phone} onChange={(e) => setClientInfo({...clientInfo, phone: e.target.value})} className="w-full bg-slate-50 rounded-2xl px-12 py-5 text-[11px] font-bold tracking-widest uppercase outline-none focus:bg-white focus:ring-4 ring-blue-50 transition-all border border-transparent focus:border-blue-100" />
+                                                <Icon name="Phone" className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-300 group-focus-within:text-blue-500 transition-colors" size={16} />
+                                                <input type="tel" placeholder="TÉLÉPHONE (OPTIONNEL)" value={clientInfo.phone} onChange={(e) => setClientInfo({...clientInfo, phone: e.target.value})} className="w-full bg-slate-50 rounded-xl sm:rounded-2xl px-12 py-4 sm:py-5 text-[10px] sm:text-[11px] font-bold tracking-widest uppercase outline-none focus:bg-white focus:ring-4 ring-blue-50 transition-all border border-transparent focus:border-blue-100" />
                                             </div>
                                         </div>
-                                        {!canProgress() && <div className="flex items-center gap-2 justify-center text-[10px] font-bold text-blue-500 uppercase tracking-widest animate-pulse"><Icon name="AlertCircle" size={14} /> Identification requise pour voir les tarifs</div>}
+                                        {!canProgress() && <div className="flex items-center gap-2 justify-center text-[9px] sm:text-[10px] font-bold text-blue-500 uppercase tracking-widest animate-pulse"><Icon name="AlertCircle" size={12} /> Identification requise pour voir les tarifs</div>}
                                     </div>
                                 )}
 
                                 {STEPS[currentStep].isBriefStep && (
-                                    <div className="max-w-2xl mx-auto bg-white p-10 rounded-[2.5rem] card-shadow border border-white space-y-6">
-                                        <textarea rows="6" placeholder="Décrivez votre vision du projet..." value={clientInfo.brief} onChange={(e) => setClientInfo({...clientInfo, brief: e.target.value})} className="w-full bg-slate-50 rounded-2xl p-6 text-sm font-medium outline-none focus:bg-white focus:ring-4 ring-blue-50 transition-all border border-transparent focus:border-blue-100 resize-none"></textarea>
+                                    <div className="max-w-2xl mx-auto bg-white p-6 sm:p-10 rounded-[2rem] sm:rounded-[2.5rem] card-shadow border border-white space-y-6">
+                                        <textarea rows="5" placeholder="Décrivez votre vision du projet..." value={clientInfo.brief} onChange={(e) => setClientInfo({...clientInfo, brief: e.target.value})} className="w-full bg-slate-50 rounded-xl sm:rounded-2xl p-4 sm:p-6 text-xs sm:text-sm font-medium outline-none focus:bg-white focus:ring-4 ring-blue-50 transition-all border border-transparent focus:border-blue-100 resize-none"></textarea>
                                     </div>
                                 )}
 
                                 {!STEPS[currentStep].isContactStep && !STEPS[currentStep].isBriefStep && (
-                                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
                                         {STEPS[currentStep]?.options.map((option) => {
                                             const isSelected = Array.isArray(selections[STEPS[currentStep].id]) ? selections[STEPS[currentStep].id]?.includes(option.id) : selections[STEPS[currentStep].id] === option.id;
                                             return (
                                                 <button key={option.id} onClick={() => !option.disabled && handleSelect(option.id)} disabled={option.disabled} 
-                                                    className={`group relative p-8 text-left transition-all duration-500 rounded-[2.2rem] border-[1.5px] flex flex-col h-full hover:-translate-y-1 ${
+                                                    className={`group relative p-6 sm:p-8 text-left transition-all duration-500 rounded-[1.8rem] sm:rounded-[2.2rem] border-[1.5px] flex flex-col h-full hover:-translate-y-1 ${
                                                         option.disabled ? 'opacity-40 grayscale cursor-not-allowed border-transparent bg-slate-100' : 
-                                                        isSelected ? 'bg-white border-blue-500 card-shadow-active scale-[1.02] selected-ring' : 
+                                                        isSelected ? 'bg-white border-blue-500 card-shadow-active scale-[1.01] sm:scale-[1.02] selected-ring' : 
                                                         'bg-white border-slate-100 hover:border-blue-200 card-shadow'
                                                     }`}
                                                 >
                                                     {option.recommended && (
-                                                        <div className="absolute -top-3 left-8 bg-gradient-to-r from-blue-600 to-indigo-600 text-white text-[8px] uppercase tracking-widest font-black py-1.5 px-4 rounded-full shadow-lg shadow-blue-200 z-10">
+                                                        <div className="absolute -top-2.5 left-6 sm:left-8 bg-gradient-to-r from-blue-600 to-indigo-600 text-white text-[7px] sm:text-[8px] uppercase tracking-widest font-black py-1 px-3 sm:px-4 rounded-full shadow-lg shadow-blue-200 z-10">
                                                             Recommandé
                                                         </div>
                                                     )}
 
                                                     {isSelected && (
-                                                        <div className="absolute top-6 right-6 w-6 h-6 bg-blue-600 rounded-full flex items-center justify-center animate-in zoom-in-95">
-                                                            <Icon name="Check" size={12} className="text-white" />
+                                                        <div className="absolute top-5 right-5 sm:top-6 sm:right-6 w-5 h-5 sm:w-6 sm:h-6 bg-blue-600 rounded-full flex items-center justify-center animate-in zoom-in-95">
+                                                            <Icon name="Check" size={10} className="text-white" />
                                                         </div>
                                                     )}
 
-                                                    <div className="flex justify-between items-start mb-8">
-                                                        <div className={`p-4 rounded-2xl transition-all duration-300 ${isSelected ? 'bg-blue-600 text-white' : 'bg-blue-50 text-blue-600 group-hover:bg-blue-100'}`}>{option.icon}</div>
-                                                        <div className={`font-mono text-sm font-black ${isSelected ? 'text-blue-600' : 'text-slate-400'}`}>{option.customPrice || formatPrice(option.price) + '€'}</div>
+                                                    <div className="flex justify-between items-start mb-6 sm:mb-8">
+                                                        <div className={`p-3 sm:p-4 rounded-xl sm:rounded-2xl transition-all duration-300 ${isSelected ? 'bg-blue-600 text-white' : 'bg-blue-50 text-blue-600 group-hover:bg-blue-100'}`}>{React.cloneElement(option.icon, { size: 20 })}</div>
+                                                        <div className={`font-mono text-xs sm:text-sm font-black ${isSelected ? 'text-blue-600' : 'text-slate-400'}`}>{option.customPrice || formatPrice(option.price) + '€'}</div>
                                                     </div>
-                                                    <h3 className={`text-xl font-extrabold mb-3 uppercase tracking-tight leading-tight ${isSelected ? 'text-slate-900' : 'text-slate-700'}`}>{option.label}</h3>
-                                                    <p className="text-[11px] text-slate-400 font-semibold mb-8 leading-relaxed">{option.info}</p>
+                                                    <h3 className={`text-lg sm:text-xl font-extrabold mb-2 sm:mb-3 uppercase tracking-tight leading-tight ${isSelected ? 'text-slate-900' : 'text-slate-700'}`}>{option.label}</h3>
+                                                    <p className="text-[10px] sm:text-[11px] text-slate-400 font-semibold mb-6 sm:mb-8 leading-relaxed">{option.info}</p>
                                                     
                                                     {option.features && (
-                                                        <div className={`mt-auto pt-6 border-t ${isSelected ? 'border-blue-50' : 'border-slate-50'} space-y-3`}>
+                                                        <div className={`mt-auto pt-4 sm:pt-6 border-t ${isSelected ? 'border-blue-50' : 'border-slate-50'} space-y-2 sm:space-y-3`}>
                                                             {option.features.map((f, i) => (
-                                                                <div key={i} className="flex items-start gap-2.5">
-                                                                    <div className={`w-4 h-4 rounded-full flex items-center justify-center mt-0.5 ${isSelected ? 'bg-blue-100' : 'bg-slate-100'}`}>
+                                                                <div key={i} className="flex items-start gap-2 sm:gap-2.5">
+                                                                    <div className={`w-3.5 h-3.5 sm:w-4 sm:h-4 rounded-full flex items-center justify-center mt-0.5 ${isSelected ? 'bg-blue-100' : 'bg-slate-100'}`}>
                                                                         <Icon name="Check" size={8} className={isSelected ? 'text-blue-600' : 'text-slate-400'} />
                                                                     </div>
-                                                                    <span className={`text-[11px] font-bold ${isSelected ? 'text-slate-700' : 'text-slate-500'}`}>{f}</span>
+                                                                    <span className={`text-[10px] sm:text-[11px] font-bold ${isSelected ? 'text-slate-700' : 'text-slate-500'}`}>{f}</span>
                                                                 </div>
                                                             ))}
                                                         </div>
@@ -401,61 +426,61 @@
                                     </div>
                                 )}
 
-                                <div className="flex items-center pt-8 border-t border-slate-50">
-                                    <button onClick={handlePrev} disabled={currentStep === 0} className={`flex items-center gap-2 px-8 py-4 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all ${currentStep === 0 ? 'opacity-0' : 'text-slate-400 hover:text-slate-900 bg-white hover:card-shadow'}`}><Icon name="ChevronLeft" size={16} /> Précédent</button>
+                                <div className="flex items-center pt-4 sm:pt-8 border-t border-slate-50">
+                                    <button onClick={handlePrev} disabled={currentStep === 0} className={`flex items-center gap-2 px-4 sm:px-8 py-3 sm:py-4 rounded-xl sm:rounded-2xl text-[9px] sm:text-[10px] font-black uppercase tracking-widest transition-all ${currentStep === 0 ? 'opacity-0' : 'text-slate-400 hover:text-slate-900 bg-white hover:card-shadow'}`}><Icon name="ChevronLeft" size={14} /> Précédent</button>
                                 </div>
                             </div>
                         ) : (
-                            <div className="max-w-4xl mx-auto space-y-16 animate-in zoom-in-95 pb-20">
-                                <div className="text-center space-y-6">
-                                    <div className="inline-block p-8 rounded-[2.5rem] bg-blue-50 text-blue-600 animate-pulse"><Icon name="FileText" size={48} /></div>
-                                    <h2 className="text-5xl lg:text-7xl font-black uppercase tracking-tighter">Votre Devis Final.</h2>
-                                    <p className="text-slate-400 font-bold uppercase tracking-widest text-xs">Document sur-mesure pour {clientInfo.company}</p>
+                            <div className="max-w-4xl mx-auto space-y-12 sm:space-y-16 animate-in zoom-in-95 pb-20 px-2">
+                                <div className="text-center space-y-4 sm:space-y-6">
+                                    <div className="inline-block p-6 sm:p-8 rounded-[1.8rem] sm:rounded-[2.5rem] bg-blue-50 text-blue-600 animate-pulse"><Icon name="FileText" size={32} className="sm:w-12 sm:h-12" /></div>
+                                    <h2 className="text-4xl sm:text-6xl lg:text-7xl font-black uppercase tracking-tighter break-words">Votre Devis Final.</h2>
+                                    <p className="text-slate-400 font-bold uppercase tracking-widest text-[10px] sm:text-xs">Document sur-mesure pour {clientInfo.company}</p>
                                 </div>
 
                                 {statusMessage && (
-                                    <div className={`p-8 rounded-[2.5rem] text-center text-[10px] font-black uppercase tracking-widest flex flex-col items-center gap-4 border-2 ${statusMessage.type === 'success' ? 'bg-green-50 text-green-600 border-green-100' : 'bg-red-50 text-red-500 border-red-100'}`}>
-                                        {statusMessage.type === 'success' ? <Icon name="Check" size={32} /> : <Icon name="XCircle" size={32} />}
+                                    <div className={`p-6 sm:p-8 rounded-[1.8rem] sm:rounded-[2.5rem] text-center text-[9px] sm:text-[10px] font-black uppercase tracking-widest flex flex-col items-center gap-3 sm:gap-4 border-2 ${statusMessage.type === 'success' ? 'bg-green-50 text-green-600 border-green-100' : 'bg-red-50 text-red-500 border-red-100'}`}>
+                                        {statusMessage.type === 'success' ? <Icon name="Check" size={24} /> : <Icon name="XCircle" size={24} />}
                                         {statusMessage.text}
                                     </div>
                                 )}
 
-                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                                    <button onClick={downloadQuote} className="flex items-center justify-center gap-4 bg-white border-2 border-slate-100 p-8 rounded-[2.5rem] font-black text-xs uppercase tracking-widest hover:border-blue-600 hover:text-blue-600 transition-all card-shadow">
-                                        <Icon name="Download" size={20} /> Télécharger le PDF
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+                                    <button onClick={downloadQuote} className="flex items-center justify-center gap-3 sm:gap-4 bg-white border-2 border-slate-100 p-6 sm:p-8 rounded-[1.8rem] sm:rounded-[2.5rem] font-black text-[10px] sm:text-xs uppercase tracking-widest hover:border-blue-600 hover:text-blue-600 transition-all card-shadow">
+                                        <Icon name="Download" size={18} /> Télécharger le PDF
                                     </button>
-                                    <button onClick={sendEmail} disabled={isSending} className="flex items-center justify-center gap-4 bg-blue-600 text-white p-8 rounded-[2.5rem] font-black text-xs uppercase tracking-widest hover:scale-[1.03] transition-all shadow-xl shadow-blue-200 disabled:opacity-50">
-                                        {isSending ? <Icon name="Loader2" size={20} className="animate-spin" /> : <Icon name="Send" size={20} />}
+                                    <button onClick={sendEmail} disabled={isSending} className="flex items-center justify-center gap-3 sm:gap-4 bg-blue-600 text-white p-6 sm:p-8 rounded-[1.8rem] sm:rounded-[2.5rem] font-black text-[10px] sm:text-xs uppercase tracking-widest hover:scale-[1.03] transition-all shadow-xl shadow-blue-200 disabled:opacity-50">
+                                        {isSending ? <Icon name="Loader2" size={18} className="animate-spin" /> : <Icon name="Send" size={18} />}
                                         Envoyer par mail
                                     </button>
                                 </div>
 
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                                    <div className="bg-white p-12 rounded-[3.5rem] card-shadow border border-white">
-                                        <h3 className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-10 flex items-center gap-3"><Icon name="Rocket" size={16} /> Architecture Setup</h3>
-                                        <div className="space-y-6 mb-12">
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
+                                    <div className="bg-white p-8 sm:p-12 rounded-[2.5rem] sm:rounded-[3.5rem] card-shadow border border-white">
+                                        <h3 className="text-[9px] sm:text-[10px] font-black uppercase tracking-widest text-slate-400 mb-8 sm:mb-10 flex items-center gap-3"><Icon name="Rocket" size={14} /> Architecture Setup</h3>
+                                        <div className="space-y-4 sm:space-y-6 mb-8 sm:mb-12">
                                             {selectedOptions.filter(o => !o.monthly).map(o => (
-                                                <div key={o.id} className="flex justify-between items-center"><span className="font-bold text-slate-800 text-sm uppercase tracking-tighter">{o.label}</span><div className="flex-1 mx-6 border-b border-slate-50"></div><span className="font-mono text-sm font-black text-blue-600">{o.customPrice || formatPrice(o.price) + '€'}</span></div>
+                                                <div key={o.id} className="flex justify-between items-center"><span className="font-bold text-slate-800 text-xs sm:text-sm uppercase tracking-tighter">{o.label}</span><div className="flex-1 mx-4 sm:mx-6 border-b border-slate-50"></div><span className="font-mono text-xs sm:text-sm font-black text-blue-600">{o.customPrice || formatPrice(o.price) + '€'}</span></div>
                                             ))}
                                         </div>
-                                        <div className="pt-10 border-t-4 border-slate-50 flex justify-between items-end"><span className="text-[10px] font-black text-slate-400 uppercase">Investissement Setup</span><span className="text-4xl font-black text-blue-600">{formatPrice(totals.oneTime)}€</span></div>
+                                        <div className="pt-8 sm:pt-10 border-t-4 border-slate-50 flex justify-between items-end"><span className="text-[9px] sm:text-[10px] font-black text-slate-400 uppercase">Investissement Setup</span><span className="text-3xl sm:text-4xl font-black text-blue-600">{formatPrice(totals.oneTime)}€</span></div>
                                     </div>
-                                    <div className="bg-slate-900 p-12 rounded-[3.5rem] text-white shadow-2xl">
-                                        <h3 className="text-[10px] font-black uppercase tracking-widest text-slate-500 mb-10 flex items-center gap-3"><Icon name="TrendingUp" size={16} /> Suivi Mensuel</h3>
-                                        <div className="space-y-6 mb-12">
+                                    <div className="bg-slate-900 p-8 sm:p-12 rounded-[2.5rem] sm:rounded-[3.5rem] text-white shadow-2xl">
+                                        <h3 className="text-[9px] sm:text-[10px] font-black uppercase tracking-widest text-slate-500 mb-8 sm:mb-10 flex items-center gap-3"><Icon name="TrendingUp" size={14} /> Suivi Mensuel</h3>
+                                        <div className="space-y-4 sm:space-y-6 mb-8 sm:mb-12">
                                             {selectedOptions.filter(o => o.monthly).map(o => (
-                                                <div key={o.id} className="flex justify-between items-center"><span className="font-bold text-blue-100 text-sm uppercase tracking-tighter">{o.label}</span><div className="flex-1 mx-6 border-b border-white/10"></div><span className="font-mono text-sm font-black text-blue-400">{o.customPrice || formatPrice(o.price) + '€'}</span></div>
+                                                <div key={o.id} className="flex justify-between items-center"><span className="font-bold text-blue-100 text-xs sm:text-sm uppercase tracking-tighter">{o.label}</span><div className="flex-1 mx-4 sm:mx-6 border-b border-white/10"></div><span className="font-mono text-xs sm:text-sm font-black text-blue-400">{o.customPrice || formatPrice(o.price) + '€'}</span></div>
                                             ))}
                                         </div>
-                                        <div className="pt-10 border-t-4 border-white/10 flex justify-between items-end"><span className="text-[10px] font-black text-slate-500 uppercase">Mensuel HT</span><span className="text-4xl font-black text-white">{formatPrice(totals.monthly)}€</span></div>
+                                        <div className="pt-8 sm:pt-10 border-t-4 border-white/10 flex justify-between items-end"><span className="text-[9px] sm:text-[10px] font-black text-slate-500 uppercase">Mensuel HT</span><span className="text-3xl sm:text-4xl font-black text-white">{formatPrice(totals.monthly)}€</span></div>
                                     </div>
                                 </div>
-                                <div className="flex justify-center pt-10 pb-20">
+                                <div className="flex justify-center pt-6 sm:pt-10 pb-20">
                                     <button 
                                         onClick={() => { setShowSummary(false); setCurrentStep(0); setStatusMessage(null); }} 
-                                        className="flex items-center gap-3 px-8 py-4 rounded-2xl text-[10px] font-black uppercase tracking-widest text-slate-400 hover:text-blue-600 hover:bg-blue-50 transition-all border border-slate-100 hover:border-blue-100 shadow-sm"
+                                        className="flex items-center gap-2 sm:gap-3 px-6 sm:px-8 py-3 sm:py-4 rounded-xl sm:rounded-2xl text-[9px] sm:text-[10px] font-black uppercase tracking-widest text-slate-400 hover:text-blue-600 hover:bg-blue-50 transition-all border border-slate-100 hover:border-blue-100 shadow-sm"
                                     >
-                                        <Icon name="RotateCcw" size={16} />
+                                        <Icon name="RotateCcw" size={14} />
                                         Nouveau devis
                                     </button>
                                 </div>
@@ -464,14 +489,15 @@
                     </main>
 
                     {!showSummary && (
-                        <div className="fixed bottom-0 left-0 right-0 bg-white/90 backdrop-blur-xl border-t border-slate-100 p-8 shadow-[0_-20px_50px_rgba(0,0,0,0.05)] z-40 flex justify-between items-center lg:px-24">
+                        <div className="fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-xl border-t border-slate-100 p-4 sm:p-8 shadow-[0_-20px_50px_rgba(0,0,0,0.05)] z-40 flex justify-between items-center lg:px-24">
                             <div className="flex flex-col">
-                                <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Total estimé</span>
-                                <span className="text-4xl font-black text-blue-600 leading-none tracking-tighter">{formatPrice(totals.oneTime + totals.monthly)}€ {hasCustomPrice && <span className="text-xl">*</span>}</span>
+                                <span className="text-[8px] sm:text-[10px] font-black text-slate-400 uppercase tracking-widest mb-0.5 sm:mb-1">Total estimé</span>
+                                <span className="text-2xl sm:text-4xl font-black text-blue-600 leading-none tracking-tighter">{formatPrice(totals.oneTime + totals.monthly)}€ {hasCustomPrice && <span className="text-lg sm:text-xl">*</span>}</span>
                             </div>
-                            <button onClick={handleNext} disabled={!canProgress()} className="bg-blue-600 text-white px-12 lg:px-20 py-5 rounded-2xl text-xs font-black uppercase tracking-widest shadow-xl shadow-blue-100 hover:scale-105 active:scale-95 transition-all disabled:opacity-20 flex items-center gap-4 group">
-                                {currentStep === STEPS.length - 1 ? 'Finaliser mon devis' : 'Suivant'}
-                                <Icon name="ChevronRight" size={18} className="group-hover:translate-x-1 transition-all" />
+                            <button onClick={handleNext} disabled={!canProgress()} className="bg-blue-600 text-white px-8 sm:px-12 lg:px-20 py-4 sm:py-5 rounded-xl sm:rounded-2xl text-[10px] sm:text-xs font-black uppercase tracking-widest shadow-xl shadow-blue-100 hover:scale-105 active:scale-95 transition-all disabled:opacity-20 flex items-center gap-3 sm:gap-4 group">
+                                <span className="hidden sm:inline">{currentStep === STEPS.length - 1 ? 'Finaliser mon devis' : 'Suivant'}</span>
+                                <span className="sm:hidden">{currentStep === STEPS.length - 1 ? 'Finaliser' : 'Suivant'}</span>
+                                <Icon name="ChevronRight" size={16} className="group-hover:translate-x-1 transition-all" />
                             </button>
                         </div>
                     )}
@@ -484,5 +510,3 @@
     </script>
 </body>
 </html>
-
-                   
