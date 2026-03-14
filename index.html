@@ -80,6 +80,8 @@
                 ShieldCheck: '<path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2-1 4-2 7-2 2.5 0 4.5 1 6.5 2a1 1 0 0 1 1 1z" /><path d="m9 12 2 2 4-4" />',
                 BarChart3: '<path d="M3 3v18h18" /><rect width="4" height="7" x="7" y="10" rx="1" /><rect width="4" height="12" x="15" y="5" rx="1" />',
                 Building2: '<path d="M6 22V4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v18Z" /><path d="M6 12H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h2" /><path d="M18 9h2a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-2" /><path d="M10 6h4" /><path d="M10 10h4" /><path d="M10 14h4" /><path d="M10 18h4" />',
+                Camera: '<path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3"/>',
+                Scale: '<path d="m16 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="m2 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="M7 21h10"/><path d="M12 3v18"/><path d="M3 7h2c2 0 5-1 7-2 2 1 5 2 7 2h2"/>',
                 Mail: '<rect width="20" height="16" x="2" y="4" rx="2" /><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />',
                 Phone: '<path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />',
                 AlertCircle: '<circle cx="12" cy="12" r="10" /><line x1="12" x2="12" y1="8" y2="12" /><line x1="12" x2="12.01" y1="16" y2="16" />',
@@ -121,8 +123,8 @@
                     { id: 'vitrine-multi', label: 'Vitrine Premium', price: 1000, icon: <Icon name="Sparkles" size={24} />, info: 'Plus de 5 pages. Architecture multi-pages avec univers graphique riche.', features: ['Architecture avancée', 'Parcours UX complexe', 'Format PME/ETI'], impact: 35 },
                     { id: 'ecommerce-basic', label: 'E-commerce Basic', price: 1500, icon: <Icon name="Box" size={24} />, info: 'Boutique essentielle. Lancer vos ventes rapidement et simplement.', features: ['Gestion autonome', 'Paiement Stripe/PP', 'Fiches produits optimisées'], impact: 45 },
                     { id: 'ecommerce', label: 'E-commerce Premium', price: 2500, icon: <Icon name="Box" size={24} />, info: 'Boutique haute performance. Expérience d’achat fluide et sécurisée.', features: ['Filtres à facettes', 'Automatisations stock', 'Vitesse éclair'], impact: 55 },
-                    { id: 'application', label: 'Application Web / SaaS', price: 0, customPrice: 'Sur demande', disabled: true, icon: <Icon name="LayoutPanelTop" size={24} />, info: 'Plateforme métier complexe ou dashboard sur-mesure.', features: ['Dashboard admin', 'Backend temps réel', 'Hautement scalable'], impact: 65 },
-                    { id: 'elearning', label: 'Espace E-learning', price: 0, customPrice: 'Sur demande', disabled: true, icon: <Icon name="GraduationCap" size={24} />, info: 'Plateforme de formation interactive. Étude approfondie requise.', features: ['Quizz & Certificats', 'Vente de formations', 'Suivi élèves'], impact: 50 },
+                    { id: 'application', label: 'Application Web / SaaS', price: 0, customPrice: 'Sur RDV', icon: <Icon name="LayoutPanelTop" size={24} />, info: 'Plateforme métier ou dashboard sur-mesure. Réservé aux projets d\'envergure.', features: ['Architecture scalable', 'Base de données', 'Étude sur rendez-vous'], impact: 65 },
+                    { id: 'elearning', label: 'Espace E-learning', price: 0, customPrice: 'Sur RDV', icon: <Icon name="GraduationCap" size={24} />, info: 'Plateforme de formation interactive. Nécessite un cahier des charges dédié.', features: ['Quizz & Certificats', 'Vente de formations', 'Étude sur rendez-vous'], impact: 50 },
                 ]
             },
             {
@@ -134,18 +136,21 @@
                     { id: 'ia-custom', label: 'Création & Intégration IA', price: 400, icon: <Icon name="Cpu" size={24} />, info: 'Chatbots intelligents ou génération de contenu dynamique.', features: ['Productivité accrue', 'Support client 24/7', 'Vision futuriste'], impact: 25 },
                     { id: 'graphisme-3d', label: 'Expérience 3D Immersive', price: 300, icon: <Icon name="Box" size={24} />, info: 'Environnements 3D interactifs pour un impact visuel total.', features: ['Effet wahou garanti', 'Engagement +300%', 'Technologie WebGL'], impact: 15 },
                     { id: 'seo-setup', label: 'Optimisation SEO Expert', price: 300, recommended: true, icon: <Icon name="Search" size={24} />, info: 'Configuration technique complète pour dominer Google.', features: ['Sémantique avancée', 'Maillage interne', 'Audit technique'], impact: 10 },
+                    { id: 'drone-4k', label: 'Shooting Drone 4K', price: 450, icon: <Icon name="Camera" size={24} />, info: 'Coupez le souffle de vos visiteurs avec des photos et vidéos aériennes spectaculaires.', features: ['Qualité Cinéma 4K', 'Montage professionnel', 'Impact visuel fort'], impact: 35 },
+                    { id: 'cgv-avocat', label: 'CGV Rédigées par un Avocat', price: 200, icon: <Icon name="Scale" size={24} />, info: 'Bétonnez et protégez votre activité avec des Conditions Générales de Vente 100% sur-mesure.', features: ['Conformité RGPD', '100% Légal', 'Tranquillité absolue'], impact: 10 },
                 ],
                 multiple: true
             },
             {
                 id: 'recurring',
                 title: 'Assurez votre sérénité',
-                label: 'Suivi',
-                description: 'Choisissez votre niveau d\'accompagnement pour garantir performance et sécurité.',
+                label: 'Abonnements',
+                description: 'Choisissez vos abonnements mensuels pour déléguer la technique et garantir la performance de votre plateforme.',
                 options: [
-                    { id: 'maint-essentielle', label: 'Maintenance Sérénité', price: 69, monthly: true, icon: <Icon name="ShieldCheck" size={24} />, info: 'Sauvegardes et monitoring de sécurité hebdomadaire.', features: ['Updates WP/Plugins', 'Backup Cloud journalier', 'Sécurité active'], impact: 5 },
-                    { id: 'maint-premium', label: 'Maintenance Innovation', price: 149, monthly: true, recommended: true, icon: <Icon name="ShieldCheck" size={24} />, info: 'Support prioritaire et évolution technique de vos modules complexes.', features: ['Support Slack dédié', 'Intervention < 4h', 'Évolutions offertes'], impact: 10 },
-                    { id: 'seo-local', label: 'Croissance SEO Mensuelle', price: 190, monthly: true, icon: <Icon name="Search" size={24} />, info: 'Suivi mensuel et stratégie de contenu pour dominer le marché.', features: ['Reporting mensuel', 'Rédaction blogs IA', 'Suivi positions'], impact: 15 },
+                    { id: 'publication', label: 'Publication Simple', price: 19, monthly: true, icon: <Icon name="FileText" size={24} />, info: 'Nous intégrons vos nouveaux articles et vos nouvelles réalisations à votre place.', features: ['Mise en ligne', 'Mise en page', 'Gain de temps'], impact: 5 },
+                    { id: 'pub-maint', label: 'Publication + Maintenance', price: 89, monthly: true, recommended: true, icon: <Icon name="ShieldCheck" size={24} />, info: 'La délégation totale : intégration de vos contenus, mises à jour, sécurité et sauvegardes.', features: ['Contenus inclus', 'Backup Cloud', 'Sécurité active'], impact: 15 },
+                    { id: 'maint-premium', label: 'Maintenance Innovation', price: 169, monthly: true, icon: <Icon name="ShieldCheck" size={24} />, info: 'Support prioritaire et évolution technique de vos modules complexes.', features: ['Support Slack dédié', 'Intervention < 4h', 'Évolutions offertes'], impact: 10 },
+                    { id: 'seo-local', label: 'Croissance SEO Mensuelle', price: 289, monthly: true, icon: <Icon name="Search" size={24} />, info: 'Suivi mensuel et stratégie de contenu pour dominer le marché.', features: ['Reporting mensuel', 'Rédaction blogs IA', 'Suivi positions'], impact: 15 },
                 ],
                 multiple: true
             },
@@ -227,11 +232,20 @@
             const handleSelect = (optionId) => {
                 const step = STEPS[currentStep];
                 if (step.multiple) {
-                    const currentSelections = selections[step.id] || [];
-                    const newSelections = currentSelections.includes(optionId)
-                        ? currentSelections.filter(id => id !== optionId)
-                        : [...currentSelections, optionId];
-                    setSelections({ ...selections, [step.id]: newSelections });
+                    let currentSelections = selections[step.id] || [];
+                    const isAlreadySelected = currentSelections.includes(optionId);
+                    
+                    if (isAlreadySelected) {
+                        currentSelections = currentSelections.filter(id => id !== optionId);
+                    } else {
+                        currentSelections = [...currentSelections, optionId];
+                        
+                        // Logique exclusive : si Publication+Maintenance coché, on décoche Publication
+                        if (step.id === 'recurring' && optionId === 'pub-maint') {
+                            currentSelections = currentSelections.filter(id => id !== 'publication');
+                        }
+                    }
+                    setSelections({ ...selections, [step.id]: currentSelections });
                 } else {
                     setSelections({ ...selections, [step.id]: optionId });
                 }
@@ -381,45 +395,69 @@
                                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
                                         {STEPS[currentStep]?.options.map((option) => {
                                             const isSelected = Array.isArray(selections[STEPS[currentStep].id]) ? selections[STEPS[currentStep].id]?.includes(option.id) : selections[STEPS[currentStep].id] === option.id;
+                                            
+                                            let isOptionDisabled = option.disabled;
+                                            let displayInfo = option.info;
+                                            
+                                            // Griser "Publication" si "Publication + Maintenance" est sélectionné
+                                            if (STEPS[currentStep].id === 'recurring' && option.id === 'publication') {
+                                                if (selections['recurring']?.includes('pub-maint')) {
+                                                    isOptionDisabled = true;
+                                                    displayInfo = "Déjà inclus dans le forfait Publication + Maintenance.";
+                                                }
+                                            }
+
                                             return (
-                                                <button key={option.id} onClick={() => !option.disabled && handleSelect(option.id)} disabled={option.disabled} 
-                                                    className={`group relative p-6 sm:p-8 text-left transition-all duration-500 rounded-[1.8rem] sm:rounded-[2.2rem] border-[1.5px] flex flex-col h-full hover:-translate-y-1 ${
-                                                        option.disabled ? 'opacity-40 grayscale cursor-not-allowed border-transparent bg-slate-100' : 
-                                                        isSelected ? 'bg-white border-blue-500 card-shadow-active scale-[1.01] sm:scale-[1.02] selected-ring' : 
+                                                <button key={option.id} onClick={() => !isOptionDisabled && handleSelect(option.id)} disabled={isOptionDisabled} 
+                                                    className={`group relative p-6 sm:p-8 text-left transition-all duration-500 rounded-[1.8rem] sm:rounded-[2.2rem] border-2 flex flex-col h-full hover:-translate-y-1 ${
+                                                        isOptionDisabled ? 'opacity-40 grayscale cursor-not-allowed border-transparent bg-slate-100' : 
+                                                        isSelected ? 'bg-white border-blue-600 card-shadow-active scale-[1.01] sm:scale-[1.02] shadow-[0_0_0_4px_rgba(59,102,245,0.1)]' : 
                                                         'bg-white border-slate-100 hover:border-blue-200 card-shadow'
                                                     }`}
                                                 >
                                                     {option.recommended && (
-                                                        <div className="absolute -top-2.5 left-6 sm:left-8 bg-gradient-to-r from-blue-600 to-indigo-600 text-white text-[7px] sm:text-[8px] uppercase tracking-widest font-black py-1 px-3 sm:px-4 rounded-full shadow-lg shadow-blue-200 z-10">
-                                                            Recommandé
+                                                        <div className="absolute -top-3 left-6 sm:left-8 bg-slate-900 text-white text-[9px] sm:text-[10px] uppercase tracking-widest font-black py-1.5 px-4 sm:px-5 rounded-full shadow-lg z-10 flex items-center gap-1.5">
+                                                            <Icon name="Sparkles" size={12} className="text-yellow-400" /> Recommandé
                                                         </div>
                                                     )}
 
                                                     {isSelected && (
-                                                        <div className="absolute top-5 right-5 sm:top-6 sm:right-6 w-5 h-5 sm:w-6 sm:h-6 bg-blue-600 rounded-full flex items-center justify-center animate-in zoom-in-95">
-                                                            <Icon name="Check" size={10} className="text-white" />
+                                                        <div className="absolute top-5 right-5 sm:top-6 sm:right-6 w-6 h-6 sm:w-7 sm:h-7 bg-blue-600 rounded-full flex items-center justify-center animate-in zoom-in-95 shadow-md shadow-blue-200">
+                                                            <Icon name="Check" size={12} className="text-white" />
                                                         </div>
                                                     )}
 
-                                                    <div className="flex justify-between items-start mb-6 sm:mb-8">
-                                                        <div className={`p-3 sm:p-4 rounded-xl sm:rounded-2xl transition-all duration-300 ${isSelected ? 'bg-blue-600 text-white' : 'bg-blue-50 text-blue-600 group-hover:bg-blue-100'}`}>{React.cloneElement(option.icon, { size: 20 })}</div>
-                                                        <div className={`font-mono text-xs sm:text-sm font-black ${isSelected ? 'text-blue-600' : 'text-slate-400'}`}>{option.customPrice || formatPrice(option.price) + '€'}</div>
-                                                    </div>
-                                                    <h3 className={`text-lg sm:text-xl font-extrabold mb-2 sm:mb-3 uppercase tracking-tight leading-tight ${isSelected ? 'text-slate-900' : 'text-slate-700'}`}>{option.label}</h3>
-                                                    <p className="text-[10px] sm:text-[11px] text-slate-400 font-semibold mb-6 sm:mb-8 leading-relaxed">{option.info}</p>
-                                                    
-                                                    {option.features && (
-                                                        <div className={`mt-auto pt-4 sm:pt-6 border-t ${isSelected ? 'border-blue-50' : 'border-slate-50'} space-y-2 sm:space-y-3`}>
-                                                            {option.features.map((f, i) => (
-                                                                <div key={i} className="flex items-start gap-2 sm:gap-2.5">
-                                                                    <div className={`w-3.5 h-3.5 sm:w-4 sm:h-4 rounded-full flex items-center justify-center mt-0.5 ${isSelected ? 'bg-blue-100' : 'bg-slate-100'}`}>
-                                                                        <Icon name="Check" size={8} className={isSelected ? 'text-blue-600' : 'text-slate-400'} />
-                                                                    </div>
-                                                                    <span className={`text-[10px] sm:text-[11px] font-bold ${isSelected ? 'text-slate-700' : 'text-slate-500'}`}>{f}</span>
-                                                                </div>
-                                                            ))}
+                                                    <div className="flex flex-col h-full w-full">
+                                                        <div className={`w-12 h-12 sm:w-14 sm:h-14 mb-5 sm:mb-6 rounded-2xl flex items-center justify-center transition-all duration-300 ${isSelected ? 'bg-blue-600 text-white shadow-lg shadow-blue-200' : 'bg-slate-50 text-slate-600 group-hover:bg-blue-50 group-hover:text-blue-600'}`}>
+                                                            {React.cloneElement(option.icon, { size: 24 })}
                                                         </div>
-                                                    )}
+                                                        
+                                                        <h3 className={`text-lg sm:text-xl font-black mb-2 uppercase tracking-tight leading-tight pr-8 ${isSelected ? 'text-slate-900' : 'text-slate-800'}`}>{option.label}</h3>
+                                                        
+                                                        <div className="flex items-baseline gap-1.5 mb-3 sm:mb-4">
+                                                            <span className={`text-2xl sm:text-3xl font-black tracking-tighter ${isSelected ? 'text-blue-600' : 'text-slate-900'}`}>
+                                                                {option.customPrice || formatPrice(option.price) + '€'}
+                                                            </span>
+                                                            {option.monthly && !option.customPrice && (
+                                                                <span className="text-[10px] sm:text-xs font-bold text-slate-400 uppercase tracking-widest">/mois</span>
+                                                            )}
+                                                        </div>
+                                                        
+                                                        <p className="text-[11px] sm:text-xs text-slate-500 font-medium mb-6 sm:mb-8 leading-relaxed flex-1">{displayInfo}</p>
+                                                        
+                                                        {option.features && (
+                                                            <div className={`mt-auto pt-4 sm:pt-6 border-t ${isSelected ? 'border-blue-100' : 'border-slate-100'} space-y-2.5 sm:space-y-3`}>
+                                                                {option.features.map((f, i) => (
+                                                                    <div key={i} className="flex items-start gap-2.5">
+                                                                        <div className={`shrink-0 w-4 h-4 rounded-full flex items-center justify-center mt-0.5 ${isSelected ? 'bg-blue-100 text-blue-600' : 'bg-slate-100 text-slate-400'}`}>
+                                                                            <Icon name="Check" size={10} />
+                                                                        </div>
+                                                                        <span className={`text-[11px] sm:text-xs font-bold leading-tight ${isSelected ? 'text-slate-700' : 'text-slate-500'}`}>{f}</span>
+                                                                    </div>
+                                                                ))}
+                                                            </div>
+                                                        )}
+                                                    </div>
                                                 </button>
                                             );
                                         })}
