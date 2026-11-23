@@ -10,7 +10,7 @@ export interface QuotePdfPayload {
   timelineLabel: string;
   brief: string;
   oneTimeItems: ServiceOption[];
-  monthlyItem: ServiceOption | null;
+  monthlyItems: ServiceOption[];
   setupTotal: number;
   monthlyTotal: number;
   estimatedDays: number;
@@ -231,8 +231,10 @@ export function generateJaadQuotePdf(data: QuotePdfPayload): void {
   for (const item of data.oneTimeItems) {
     renderRow(item);
   }
-  if (data.monthlyItem && data.monthlyItem.price > 0) {
-    renderRow(data.monthlyItem);
+  for (const item of data.monthlyItems) {
+    if (item.price > 0) {
+      renderRow(item);
+    }
   }
 
   // Optional client brief

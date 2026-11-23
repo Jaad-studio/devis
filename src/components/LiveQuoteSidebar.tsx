@@ -50,6 +50,7 @@ interface LiveQuoteSidebarProps {
   baseOption: ServiceOption;
   selectedAi: ServiceOption[];
   selectedBoosts: ServiceOption[];
+  selectedMonthlyGrowth?: ServiceOption[];
   careOption: ServiceOption;
   setupTotal: number;
   monthlyTotal: number;
@@ -57,6 +58,7 @@ interface LiveQuoteSidebarProps {
   scores: { brand: number; google: number; automation: number };
   onRemoveAi: (id: string) => void;
   onRemoveBoost: (id: string) => void;
+  onRemoveMonthlyGrowth?: (id: string) => void;
   onResetCare: () => void;
   onJumpToSummary: () => void;
   onNextStep: () => void;
@@ -68,6 +70,7 @@ export default function LiveQuoteSidebar({
   baseOption,
   selectedAi,
   selectedBoosts,
+  selectedMonthlyGrowth = [],
   careOption,
   setupTotal,
   monthlyTotal,
@@ -75,6 +78,7 @@ export default function LiveQuoteSidebar({
   scores,
   onRemoveAi,
   onRemoveBoost,
+  onRemoveMonthlyGrowth,
   onResetCare,
   onJumpToSummary,
   onNextStep,
@@ -93,6 +97,7 @@ export default function LiveQuoteSidebar({
     (baseOption.price > 0 ? 1 : 0) +
     selectedAi.length +
     selectedBoosts.length +
+    selectedMonthlyGrowth.length +
     (careOption.price > 0 ? 1 : 0);
 
   return (
@@ -249,6 +254,28 @@ export default function LiveQuoteSidebar({
                     </div>
                   </div>
                 )}
+
+                {selectedMonthlyGrowth.map((item) => (
+                  <div
+                    key={item.id}
+                    className="flex items-center justify-between gap-2 text-xs py-2 px-3 rounded-xl bg-slate-900 text-white"
+                  >
+                    <span className="font-semibold truncate">{item.label}</span>
+                    <div className="flex items-center gap-2 shrink-0">
+                      <span className="font-bold text-blue-300">{formatEuro(item.price)}/m</span>
+                      {onRemoveMonthlyGrowth && (
+                        <button
+                          type="button"
+                          onClick={() => onRemoveMonthlyGrowth(item.id)}
+                          aria-label={`Retirer ${item.label}`}
+                          className="p-0.5 text-slate-400 hover:text-white transition-colors"
+                        >
+                          <X className="w-3.5 h-3.5" />
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                ))}
               </div>
             </div>
 
@@ -312,6 +339,12 @@ export default function LiveQuoteSidebar({
                   <span>{formatEuro(careOption.price)}/mois</span>
                 </div>
               )}
+              {selectedMonthlyGrowth.map((item) => (
+                <div key={item.id} className="flex justify-between text-xs py-1 font-semibold">
+                  <span>{item.label}</span>
+                  <span>{formatEuro(item.price)}/mois</span>
+                </div>
+              ))}
               <button
                 type="button"
                 onClick={() => {

@@ -64,7 +64,7 @@ export const BUSINESS_GOALS: BusinessGoalPreset[] = [
     baseId: 'vitrine-impact',
     aiIds: [],
     boostIds: [],
-    careId: 'seo-mensuel',
+    careId: 'maint-essentielle',
     iconName: 'Wrench',
   },
   {
@@ -76,7 +76,7 @@ export const BUSINESS_GOALS: BusinessGoalPreset[] = [
     baseId: 'vitrine-pro',
     aiIds: ['mini-app'],
     boostIds: [],
-    careId: 'seo-mensuel',
+    careId: 'maint-essentielle',
     iconName: 'Building2',
   },
   {
@@ -153,15 +153,15 @@ export const BASE_OPTIONS: ServiceOption[] = [
     category: 'base',
     label: 'Fiche Google Maps & Visibilité Locale',
     price: 290,
-    badge: 'Visibilité locale',
+    badge: 'Offerte avec tout site',
     pitch:
-      'Pour que les clients de votre ville vous trouvent sur Google et vous appellent, même sans avoir de site internet.',
+      'Pour que les clients de votre ville vous trouvent sur Google et vous appellent, même sans avoir de site internet. Offerte si vous créez un site chez JAAD Studio.',
     concreteGain:
       'Ex concret : Un client tape votre métier + votre ville sur son téléphone et tombe sur votre fiche avec vos photos, avis et bouton Appeler.',
     includes: [
       'Création ou remise à neuf de votre fiche Google',
       'Réglage des zones, horaires, photos et services',
-      'Conseils simples pour récolter plus d’avis 5 étoiles',
+      'Offerte (0 €) dès que vous prenez un site internet',
     ],
     deliveryDays: 4,
     iconName: 'MapPin',
@@ -179,7 +179,7 @@ export const BASE_OPTIONS: ServiceOption[] = [
       'Ex concret : Idéal pour un artisan ou commerce qui veut une vraie présence sérieuse rapidement sans gros budget.',
     includes: [
       'Design sur-mesure adapté aux téléphones',
-      'Présentation claire de vos services & photos',
+      'Fiche Google Maps optimisée offerte (valeur 290 €)',
       'Bouton d’appel direct, WhatsApp & formulaire de contact',
       'Formation rapide pour savoir tout utiliser',
     ],
@@ -198,9 +198,9 @@ export const BASE_OPTIONS: ServiceOption[] = [
     concreteGain:
       'Ex concret : Vos clients comprennent tout ce que vous faites, voient votre sérieux et vous envoient des demandes de devis qualifiées.',
     includes: [
-      'Plusieurs pages dédiées à vos activités',
-      'Galerie photos de vos réalisations & avis clients',
-      'Optimisé pour ressortir sur Google dans votre secteur',
+      'Plusieurs pages dédiées à vos activités & avis clients',
+      'Fiche Google Maps optimisée offerte (valeur 290 €)',
+      'Galerie photos de vos réalisations & formulaires devis',
       '100 % à vous (aucune location mensuelle obligatoire)',
     ],
     deliveryDays: 12,
@@ -218,8 +218,8 @@ export const BASE_OPTIONS: ServiceOption[] = [
     concreteGain:
       'Ex concret : Pour un showroom, constructeur, architecte ou marque qui veut projeter une image haut de gamme immédiate.',
     includes: [
-      'Direction artistique haut de gamme sur-mesure',
-      'Animations immersives ou module 3D interactif',
+      'Direction artistique haut de gamme & module 3D interactif',
+      'Fiche Google Maps optimisée offerte (valeur 290 €)',
       'Ultra rapide sur iPhone, Android et ordinateur',
       'Version bilingue Français / Anglais incluse si besoin',
     ],
@@ -240,7 +240,7 @@ export const BASE_OPTIONS: ServiceOption[] = [
     includes: [
       'Catalogue produits avec photos, tailles ou options',
       'Paiement sécurisé Carte Bancaire & Apple Pay',
-      'Emails de confirmation et factures automatiques',
+      'Fiche Google Maps optimisée offerte (valeur 290 €)',
       'Formation incluse pour ajouter vos produits facilement',
     ],
     deliveryDays: 16,
@@ -258,9 +258,9 @@ export const BASE_OPTIONS: ServiceOption[] = [
     concreteGain:
       'Ex concret : Vendez vos formations automatiquement sans reverser de commission à une plateforme extérieure.',
     includes: [
-      'Espace élève privé avec mot de passe',
-      'Organisation de vos vidéos, PDF et modules',
+      'Espace élève privé avec mot de passe & vidéos/PDF',
       'Paiement en ligne par carte & accès automatique',
+      'Fiche Google Maps optimisée offerte (valeur 290 €)',
       'Tableau de bord simple pour suivre vos élèves',
     ],
     deliveryDays: 18,
@@ -282,7 +282,7 @@ export const BASE_OPTIONS: ServiceOption[] = [
     includes: [
       'Comptes utilisateurs sécurisés sur-mesure',
       'Base de données et tableau de bord de gestion',
-      'Adapté à 100 % aux règles de votre métier',
+      'Fiche Google Maps optimisée offerte (valeur 290 €)',
       'Accompagnement complet et prise en main',
     ],
     deliveryDays: 25,
@@ -433,44 +433,6 @@ export const AI_OPTIONS: ServiceOption[] = [
 
 export const BOOST_OPTIONS: ServiceOption[] = [
   {
-    id: 'geo-ia',
-    category: 'boost',
-    label: 'Être recommandé par ChatGPT & les IA quand un client cherche votre métier',
-    price: 390,
-    badge: 'Nouveau',
-    pitch:
-      'De plus en plus de clients demandent à ChatGPT qui choisir dans leur ville. On paramètre votre présence pour que les IA citent et conseillent votre entreprise.',
-    concreteGain:
-      'Ex concret : Quand quelqu’un demande un bon pro de votre secteur à ChatGPT ou Google IA, votre nom ressort.',
-    includes: [
-      'Contenus structurés pour être lus et recommandés par les IA',
-      'Mise en avant de vos preuves de sérieux & avis locaux',
-      'Étude de publicité sur les moteurs IA si vous le souhaitez',
-    ],
-    deliveryDays: 4,
-    iconName: 'Compass',
-    scores: { brand: 15, google: 35, automation: 20 },
-  },
-  {
-    id: 'sea-ads',
-    category: 'boost',
-    label: 'Publicité Google Immédiate (Appels dès la 1re semaine)',
-    price: 390,
-    badge: 'Rapide',
-    pitch:
-      'Mise en place de votre campagne publicitaire sur Google pour apparaître tout en haut dès demain matin face aux clients pressés (hors budget pub Google).',
-    concreteGain:
-      'Ex concret : Idéal si vous voulez remplir votre planning tout de suite sans attendre.',
-    includes: [
-      'Sélection des recherches les plus rentables de votre métier',
-      'Rédaction des annonces & ciblage sur votre secteur géographique',
-      'Suivi clair du nombre d’appels et de demandes reçues',
-    ],
-    deliveryDays: 4,
-    iconName: 'TrendingUp',
-    scores: { brand: 10, google: 35, automation: 5 },
-  },
-  {
     id: 'configurateur-3d',
     category: 'boost',
     label: 'Simulateur de Prix ou Configurateur 3D sur votre site',
@@ -544,6 +506,69 @@ export const BOOST_OPTIONS: ServiceOption[] = [
   },
 ];
 
+export const MONTHLY_ACQUISITION_OPTIONS: ServiceOption[] = [
+  {
+    id: 'seo-mensuel',
+    category: 'care',
+    label: 'Suivi SEO Mensuel (Monter sur Google chaque mois)',
+    price: 149,
+    isMonthly: true,
+    badge: 'Référencement Google',
+    pitch:
+      'Travail SEO continu chaque mois : rédaction d’articles et pages locales sur votre ville, optimisation de votre Fiche Google Business et suivi de vos positions.',
+    concreteGain:
+      'Ex concret : Vous remontez durablement devant vos concurrents sur Google sans payer de pub au clic.',
+    includes: [
+      'Nouveaux articles & pages ciblées sur votre ville chaque mois',
+      'Optimisation continue de votre Fiche Google Business',
+      'Suivi clair de vos positions sur Google & Maps',
+    ],
+    deliveryDays: 0,
+    iconName: 'Search',
+    scores: { brand: 10, google: 45, automation: 10 },
+  },
+  {
+    id: 'geo-ia',
+    category: 'care',
+    label: 'Référencement IA (Être recommandé par ChatGPT & les IA)',
+    price: 149,
+    isMonthly: true,
+    badge: 'Nouveau · GEO',
+    pitch:
+      'Optimisation continue de vos contenus et preuves d’autorité pour que ChatGPT, Perplexity et Google IA citent et recommandent votre entreprise.',
+    concreteGain:
+      'Ex concret : Quand un client demande un bon professionnel de votre secteur à ChatGPT, votre nom ressort.',
+    includes: [
+      'Contenus structurés & mis à jour pour les moteurs IA',
+      'Suivi de vos citations dans ChatGPT, Perplexity & Google AI',
+      'Étude publicité dans les expériences IA selon disponibilité',
+    ],
+    deliveryDays: 0,
+    iconName: 'Compass',
+    scores: { brand: 15, google: 40, automation: 20 },
+  },
+  {
+    id: 'sea-ads',
+    category: 'care',
+    label: 'Gestion Google Ads (Publicité Google, hors budget clic)',
+    price: 190,
+    isMonthly: true,
+    badge: 'Appels rapides',
+    pitch:
+      'Création, pilotage et optimisation continue de vos campagnes Google Ads chaque mois pour capter des clients prêts à appeler (hors budget versé à Google).',
+    concreteGain:
+      'Ex concret : Vos annonces restent tout en haut de Google et sont ajustées chaque semaine pour limiter le coût par appel.',
+    includes: [
+      'Création et pilotage continu de vos annonces Google Ads',
+      'Tri des mots-clés rentables & blocage des clics inutiles',
+      'Suivi précis du nombre d’appels et de demandes reçues',
+    ],
+    deliveryDays: 0,
+    iconName: 'TrendingUp',
+    scores: { brand: 10, google: 45, automation: 10 },
+  },
+];
+
 export const CARE_OPTIONS: ServiceOption[] = [
   {
     id: 'aucun-abo',
@@ -552,8 +577,8 @@ export const CARE_OPTIONS: ServiceOption[] = [
     price: 0,
     isMonthly: true,
     pitch:
-      'Vous payez uniquement la création. Aucun frais mensuel chez JAAD Studio : vous êtes 100 % autonome.',
-    concreteGain: 'Liberté totale, zéro prélèvement chaque mois.',
+      'Vous payez uniquement la création. Aucun frais mensuel de maintenance : vous êtes 100 % autonome.',
+    concreteGain: 'Liberté totale, zéro prélèvement de maintenance.',
     includes: ['Livraison complète', 'Tous vos accès et fichiers remis en main propre'],
     deliveryDays: 0,
     iconName: 'Check',
@@ -595,43 +620,6 @@ export const CARE_OPTIONS: ServiceOption[] = [
     deliveryDays: 0,
     iconName: 'Zap',
     scores: { brand: 15, google: 25, automation: 25 },
-  },
-  {
-    id: 'seo-mensuel',
-    category: 'care',
-    label: 'Suivi SEO Mensuel (Monter sur Google chaque mois)',
-    price: 149,
-    isMonthly: true,
-    badge: 'Référencement Google',
-    pitch:
-      'Travail SEO continu chaque mois : rédaction d’articles et pages ciblées sur votre ville, optimisation de votre Fiche Google Business et suivi de vos positions.',
-    concreteGain: 'Vous grimpez durablement devant vos concurrents sur Google sans payer de pub au clic.',
-    includes: [
-      'Tout le suivi technique & hébergement inclus',
-      'Nouveaux articles & pages locales chaque mois',
-      'Suivi mensuel de vos positions sur Google & Maps',
-    ],
-    deliveryDays: 0,
-    iconName: 'Search',
-    scores: { brand: 10, google: 45, automation: 10 },
-  },
-  {
-    id: 'croissance-seo-ia',
-    category: 'care',
-    label: 'Suivi Complet : SEO Google + Mises à jour WhatsApp + IA',
-    price: 189,
-    isMonthly: true,
-    pitch:
-      'La totale chaque mois : mises à jour illimitées par WhatsApp + travail SEO mensuel pour monter sur Google + amélioration continue de vos outils IA.',
-    concreteGain: 'Votre site, votre visibilité Google et vos outils IA progressent chaque mois.',
-    includes: [
-      'Tout le suivi WhatsApp + Suivi SEO mensuel inclus',
-      'Nouveaux articles / pages ciblées pour grimper sur Google',
-      'Ajustements mensuels de vos outils et assistants IA',
-    ],
-    deliveryDays: 0,
-    iconName: 'TrendingUp',
-    scores: { brand: 20, google: 50, automation: 35 },
   },
 ];
 

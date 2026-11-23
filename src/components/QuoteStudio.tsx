@@ -25,6 +25,7 @@ import {
   BUSINESS_GOALS,
   CARE_OPTIONS,
   JAAD_INFO,
+  MONTHLY_ACQUISITION_OPTIONS,
   STEP_META,
   type BusinessGoalPreset,
   type ServiceOption,
@@ -35,6 +36,7 @@ import {
   CARE_DIAGNOSTIC_CHOICES,
   DEFAULT_ANSWERS,
   FOCUS_CHOICES,
+  MONTHLY_GROWTH_DIAGNOSTIC_CHOICES,
   QUIZ_STEPS,
   SITE_NEED_CHOICES,
   computeRecommendation,
@@ -195,6 +197,7 @@ export default function QuoteStudio() {
   const [baseId, setBaseId] = useState<string>('vitrine-impact');
   const [aiIds, setAiIds] = useState<string[]>([]);
   const [boostIds, setBoostIds] = useState<string[]>([]);
+  const [monthlyGrowthIds, setMonthlyGrowthIds] = useState<string[]>([]);
   const [careId, setCareId] = useState<string>('maint-essentielle');
   const [presetBanner, setPresetBanner] = useState<string | null>(null);
 
@@ -218,6 +221,11 @@ export default function QuoteStudio() {
     [boostIds]
   );
 
+  const selectedMonthlyGrowth = useMemo(
+    () => MONTHLY_ACQUISITION_OPTIONS.filter((item) => monthlyGrowthIds.includes(item.id)),
+    [monthlyGrowthIds]
+  );
+
   const careOption = useMemo(
     () => CARE_OPTIONS.find((item) => item.id === careId) || CARE_OPTIONS[0],
     [careId]
@@ -229,7 +237,10 @@ export default function QuoteStudio() {
     return baseOption.price + aiSum + boostSum;
   }, [baseOption, selectedAi, selectedBoosts]);
 
-  const monthlyTotal = careOption.price;
+  const monthlyTotal = useMemo(() => {
+    const growthSum = selectedMonthlyGrowth.reduce((acc, item) => acc + item.price, 0);
+    return careOption.price + growthSum;
+  }, [careOption, selectedMonthlyGrowth]);
 
   const estimatedDays = useMemo(() => {
     const hasPaidSite = baseOption.price > 0;
@@ -240,7 +251,7 @@ export default function QuoteStudio() {
   }, [baseOption, selectedAi, selectedBoosts]);
 
   const scores = useMemo(() => {
-    const all = [baseOption, ...selectedAi, ...selectedBoosts, careOption];
+    const all = [baseOption, ...selectedAi, ...selectedBoosts, ...selectedMonthlyGrowth, careOption];
     const sum = all.reduce(
       (acc, cur) => ({
         brand: acc.brand + cur.scores.brand,
@@ -312,6 +323,7 @@ export default function QuoteStudio() {
     setBaseId(rec.baseId);
     setAiIds(rec.aiIds);
     setBoostIds(rec.boostIds);
+    setMonthlyGrowthIds(rec.monthlyGrowthIds);
     setCareId(rec.careId);
     setQuizDone(true);
     setShowAddDrawer(false);
@@ -345,6 +357,7 @@ export default function QuoteStudio() {
     setBaseId('vitrine-impact');
     setAiIds([]);
     setBoostIds([]);
+    setMonthlyGrowthIds([]);
     setCareId('maint-essentielle');
     setPresetBanner(null);
     setStepIndex(0);
@@ -912,12 +925,64 @@ export default function QuoteStudio() {
                     </div>
                   </div>
 
-                  {/* 4B */}
+                  {/* 4B · Abonnements Visibilité (SEO, Référencement IA, Google Ads) */}
                   <div className="space-y-3">
                     <div className="text-xs font-extrabold uppercase tracking-wider text-blue-700">
-                      B · Après la livraison, comment voulez-vous gérer la suite ?
+                      B · Abonnements Visibilité Google, IA &amp; Publicité (Facultatif — par mois)
                     </div>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                      {MONTHLY_GROWTH_DIAGNOSTIC_CHOICES.map((choice) => {
+                        const active = answers.monthlyGrowthChoices.includes(choice.id);
+                        return (
+                          <button
+                            key={choice.id}
+                            type="button"
+                            onClick={() =>
+                              setAnswers((prev) => ({
+                                ...prev,
+                                monthlyGrowthChoices: prev.monthlyGrowthChoices.includes(choice.id)
+                                  ? prev.monthlyGrowthChoices.filter((id) => id !== choice.id)
+                                  : [...prev.monthlyGrowthChoices, choice.id],
+                              }))
+                            }
+                            className={`relative text-left rounded-2xl p-4 border-2 transition-all flex flex-col justify-between gap-2 ${
+                              active
+                                ? 'border-blue-600 bg-blue-50/50 shadow-sm'
+                                : 'border-slate-200 hover:border-blue-300 bg-white'
+                            }`}
+                          >
+                            <div className="space-y-1 pr-6">
+                              <div className="font-display font-extrabold text-sm text-slate-900 leading-snug">
+                                {choice.title}
+                              </div>
+                              <p className="text-xs text-slate-600 leading-snug">{choice.description}</p>
+                            </div>
+                            {choice.tag && (
+                              <span className="inline-block self-start text-[11px] font-extrabold text-blue-700 bg-blue-50 px-2.5 py-0.5 rounded">
+                                {choice.tag}
+                              </span>
+                            )}
+                            <span
+                              className={`absolute top-4 right-4 w-5 h-5 rounded-md flex items-center justify-center border ${
+                                active
+                                  ? 'bg-blue-600 border-blue-600 text-white'
+                                  : 'border-slate-300 text-transparent'
+                              }`}
+                            >
+                              <Check className="w-3.5 h-3.5" />
+                            </span>
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+
+                  {/* 4C · Maintenance & Mises à jour */}
+                  <div className="space-y-3">
+                    <div className="text-xs font-extrabold uppercase tracking-wider text-blue-700">
+                      C · Après la livraison, comment voulez-vous gérer la maintenance ?
+                    </div>
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                       {CARE_DIAGNOSTIC_CHOICES.map((choice) => {
                         const active = answers.care === choice.id;
                         return (
@@ -1343,43 +1408,93 @@ export default function QuoteStudio() {
                 )}
               </div>
 
-              {/* Monthly Care Switcher */}
-              <div className="pt-4 border-t border-slate-100 space-y-3">
-                <div>
-                  <h3 className="font-display text-base sm:text-lg font-extrabold text-slate-900">
-                    Suivi mensuel après livraison (modifiable en 1 clic)
-                  </h3>
-                  <p className="text-xs text-slate-600">
-                    Rien d’obligatoire : choisissez 0 € pour être autonome, ou laissez-nous gérer technique, ajouts WhatsApp ou Google.
-                  </p>
+              {/* Monthly Subscriptions (Maintenance + Visibility) */}
+              <div className="pt-4 border-t border-slate-100 space-y-5">
+                <div className="space-y-3">
+                  <div>
+                    <h3 className="font-display text-base sm:text-lg font-extrabold text-slate-900">
+                      Abonnements Visibilité : SEO, Référencement IA &amp; Google Ads (par mois)
+                    </h3>
+                    <p className="text-xs text-slate-600">
+                      Activez ou retirez chaque levier d’acquisition mensuel en 1 clic — facultatif et séparé de la création.
+                    </p>
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                    {MONTHLY_ACQUISITION_OPTIONS.map((opt) => {
+                      const active = monthlyGrowthIds.includes(opt.id);
+                      return (
+                        <button
+                          key={opt.id}
+                          type="button"
+                          onClick={() => toggleMulti(monthlyGrowthIds, setMonthlyGrowthIds, opt.id)}
+                          className={`relative text-left rounded-2xl p-4 border-2 transition-all flex flex-col justify-between gap-2 ${
+                            active
+                              ? 'border-blue-600 bg-blue-50/40 shadow-sm'
+                              : 'border-slate-200 hover:border-blue-300 bg-white'
+                          }`}
+                        >
+                          <div className="space-y-1 pr-6">
+                            <div className="font-display font-extrabold text-xs sm:text-sm text-slate-900 leading-snug">
+                              {opt.label}
+                            </div>
+                            <p className="text-[11px] text-slate-600 leading-snug">{opt.concreteGain}</p>
+                          </div>
+                          <div className="font-display font-black text-base text-blue-700 pt-1">
+                            {formatEuro(opt.price)} / mois
+                          </div>
+                          <span
+                            className={`absolute top-4 right-4 w-5 h-5 rounded-md flex items-center justify-center border ${
+                              active
+                                ? 'bg-blue-600 border-blue-600 text-white'
+                                : 'border-slate-300 text-transparent'
+                            }`}
+                          >
+                            <Check className="w-3.5 h-3.5" />
+                          </span>
+                        </button>
+                      );
+                    })}
+                  </div>
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
-                  {CARE_OPTIONS.map((opt) => {
-                    const active = careId === opt.id;
-                    return (
-                      <button
-                        key={opt.id}
-                        type="button"
-                        onClick={() => setCareId(opt.id)}
-                        className={`text-left rounded-2xl p-4 border-2 transition-all flex flex-col justify-between gap-2 ${
-                          active
-                            ? 'border-blue-600 bg-blue-50/40 shadow-sm'
-                            : 'border-slate-200 hover:border-blue-300 bg-white'
-                        }`}
-                      >
-                        <div className="space-y-1">
-                          <div className="font-display font-extrabold text-xs sm:text-sm text-slate-900 leading-snug">
-                            {opt.label}
+                <div className="space-y-3">
+                  <div>
+                    <h3 className="font-display text-base sm:text-lg font-extrabold text-slate-900">
+                      Maintenance &amp; mises à jour après livraison (modifiable en 1 clic)
+                    </h3>
+                    <p className="text-xs text-slate-600">
+                      Rien d’obligatoire : choisissez 0 € pour être autonome, ou laissez-nous gérer technique et ajouts WhatsApp.
+                    </p>
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                    {CARE_OPTIONS.map((opt) => {
+                      const active = careId === opt.id;
+                      return (
+                        <button
+                          key={opt.id}
+                          type="button"
+                          onClick={() => setCareId(opt.id)}
+                          className={`text-left rounded-2xl p-4 border-2 transition-all flex flex-col justify-between gap-2 ${
+                            active
+                              ? 'border-blue-600 bg-blue-50/40 shadow-sm'
+                              : 'border-slate-200 hover:border-blue-300 bg-white'
+                          }`}
+                        >
+                          <div className="space-y-1">
+                            <div className="font-display font-extrabold text-xs sm:text-sm text-slate-900 leading-snug">
+                              {opt.label}
+                            </div>
+                            <p className="text-[11px] text-slate-600 leading-snug">{opt.concreteGain}</p>
                           </div>
-                          <p className="text-[11px] text-slate-600 leading-snug">{opt.concreteGain}</p>
-                        </div>
-                        <div className="font-display font-black text-base text-blue-700 pt-1">
-                          {opt.price > 0 ? `${formatEuro(opt.price)} / mois` : '0 € / mois'}
-                        </div>
-                      </button>
-                    );
-                  })}
+                          <div className="font-display font-black text-base text-blue-700 pt-1">
+                            {opt.price > 0 ? `${formatEuro(opt.price)} / mois` : '0 € / mois'}
+                          </div>
+                        </button>
+                      );
+                    })}
+                  </div>
                 </div>
               </div>
             </div>
@@ -1389,6 +1504,7 @@ export default function QuoteStudio() {
               baseOption={baseOption}
               selectedAi={selectedAi}
               selectedBoosts={selectedBoosts}
+              selectedMonthlyGrowth={selectedMonthlyGrowth}
               careOption={careOption}
               setupTotal={setupTotal}
               monthlyTotal={monthlyTotal}
@@ -1440,6 +1556,7 @@ export default function QuoteStudio() {
                 baseOption={baseOption}
                 selectedAi={selectedAi}
                 selectedBoosts={selectedBoosts}
+                selectedMonthlyGrowth={selectedMonthlyGrowth}
                 careOption={careOption}
                 setupTotal={setupTotal}
                 monthlyTotal={monthlyTotal}
@@ -1620,28 +1737,51 @@ export default function QuoteStudio() {
                   )}
 
                   {activeStep.id === 'care' && (
-                    <div className="space-y-6">
+                    <div className="space-y-8">
                       <div className="space-y-2">
                         <span className="text-[11px] font-extrabold uppercase tracking-[0.2em] text-blue-600">
-                          Étape 05 · Suivi Mensuel
+                          Étape 05 · Abonnements Mensuels (Visibilité &amp; Maintenance)
                         </span>
                         <h2 className="font-display text-3xl sm:text-4xl font-black tracking-tight text-slate-900">
-                          Voulez-vous qu’on gère la suite chaque mois ?
+                          Visibilité Google / IA &amp; Maintenance mensuelle
                         </h2>
                         <p className="text-sm text-slate-600">
-                          0 € si vous gérez seul, ou forfait mensuel pour hébergement, ajouts sur WhatsApp et contenus Google.
+                          Ajoutez un abonnement SEO, Référencement IA (ChatGPT) ou Google Ads si besoin, et choisissez votre niveau de maintenance (0 € à 99 €/mois).
                         </p>
                       </div>
 
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
-                        {CARE_OPTIONS.map((option) => (
-                          <SelectableCard
-                            key={option.id}
-                            option={option}
-                            selected={careId === option.id}
-                            onToggle={() => setCareId(option.id)}
-                          />
-                        ))}
+                      <div className="space-y-3">
+                        <h3 className="font-display text-lg font-extrabold text-slate-900">
+                          Abonnements Visibilité &amp; Publicité (cumulables)
+                        </h3>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          {MONTHLY_ACQUISITION_OPTIONS.map((option) => (
+                            <SelectableCard
+                              key={option.id}
+                              option={option}
+                              selected={monthlyGrowthIds.includes(option.id)}
+                              onToggle={() =>
+                                toggleMulti(monthlyGrowthIds, setMonthlyGrowthIds, option.id)
+                              }
+                            />
+                          ))}
+                        </div>
+                      </div>
+
+                      <div className="space-y-3">
+                        <h3 className="font-display text-lg font-extrabold text-slate-900">
+                          Maintenance &amp; Mises à jour (1 choix)
+                        </h3>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          {CARE_OPTIONS.map((option) => (
+                            <SelectableCard
+                              key={option.id}
+                              option={option}
+                              selected={careId === option.id}
+                              onToggle={() => setCareId(option.id)}
+                            />
+                          ))}
+                        </div>
                       </div>
                     </div>
                   )}
@@ -1672,6 +1812,7 @@ export default function QuoteStudio() {
                   baseOption={baseOption}
                   selectedAi={selectedAi}
                   selectedBoosts={selectedBoosts}
+                  selectedMonthlyGrowth={selectedMonthlyGrowth}
                   careOption={careOption}
                   setupTotal={setupTotal}
                   monthlyTotal={monthlyTotal}
@@ -1679,6 +1820,9 @@ export default function QuoteStudio() {
                   scores={scores}
                   onRemoveAi={(id) => setAiIds((prev) => prev.filter((x) => x !== id))}
                   onRemoveBoost={(id) => setBoostIds((prev) => prev.filter((x) => x !== id))}
+                  onRemoveMonthlyGrowth={(id) =>
+                    setMonthlyGrowthIds((prev) => prev.filter((x) => x !== id))
+                  }
                   onResetCare={() => setCareId('aucun-abo')}
                   onJumpToSummary={() => {
                     setStepIndex(STEP_META.length - 1);

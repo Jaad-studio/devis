@@ -20,25 +20,24 @@ export type SiteNeedId =
   | 'webapp-saas';
 
 export type BoostChoiceId =
-  | 'geo-ia'
-  | 'sea-ads'
   | 'media-drone'
   | 'identite-logo'
   | 'configurateur-3d'
   | 'pack-legal';
 
+export type MonthlyGrowthId = 'seo-mensuel' | 'geo-ia' | 'sea-ads';
+
 export type CareChoiceId =
   | 'aucun-abo'
   | 'maint-essentielle'
-  | 'maint-active'
-  | 'seo-mensuel'
-  | 'croissance-seo-ia';
+  | 'maint-active';
 
 export interface DiagnosticAnswers {
   focus: FocusAnswer;
   aiChoices: AiChoiceId[];
   siteNeed: SiteNeedId;
   boostChoices: BoostChoiceId[];
+  monthlyGrowthChoices: MonthlyGrowthId[];
   care: CareChoiceId;
 }
 
@@ -55,6 +54,7 @@ export const DEFAULT_ANSWERS: DiagnosticAnswers = {
   aiChoices: [],
   siteNeed: 'vitrine-impact',
   boostChoices: [],
+  monthlyGrowthChoices: [],
   care: 'maint-essentielle',
 };
 
@@ -179,9 +179,9 @@ export const SITE_NEED_CHOICES: QuizChoice<SiteNeedId>[] = [
     id: 'gmb-pack',
     title: 'Juste une Fiche Google Maps optimisée pour sortir dans ma ville',
     description:
-      'Idéal pour recevoir des appels locaux rapidement sans créer un site complet.',
+      'Idéal pour recevoir des appels locaux sans créer de site. Offerte (0 €) si vous prenez un site.',
     iconName: 'MapPin',
-    tag: '290 €',
+    tag: '290 € · Offerte avec un site',
   },
   {
     id: 'vitrine-essentiel',
@@ -231,35 +231,19 @@ export const SITE_NEED_CHOICES: QuizChoice<SiteNeedId>[] = [
 
 export const BOOST_DIAGNOSTIC_CHOICES: QuizChoice<BoostChoiceId>[] = [
   {
-    id: 'geo-ia',
-    title: 'Être recommandé par ChatGPT quand un client cherche mon métier',
-    description:
-      'Quand quelqu’un demande un bon pro sur ChatGPT ou Perplexity, votre nom ressort.',
-    iconName: 'Compass',
-    tag: '+390 € · Nouveau',
-  },
-  {
-    id: 'sea-ads',
-    title: 'Lancer de la publicité Google pour avoir des appels dès la 1re semaine',
-    description:
-      'Vos annonces apparaissent tout en haut de Google dès le lancement (hors budget pub Google).',
-    iconName: 'TrendingUp',
-    tag: '+390 €',
-  },
-  {
     id: 'media-drone',
     title: 'Faire venir JAAD Studio pour un Shooting Photo, Vidéo & Drone 4K',
     description:
       'De vraies images de votre équipe, atelier ou chantiers pour remplacer les photos génériques.',
     iconName: 'Camera',
-    tag: '+390 €',
+    tag: '+390 € (en 1 fois)',
   },
   {
     id: 'identite-logo',
     title: 'Créer ou moderniser mon Logo & mes Cartes de visite',
     description: 'Une identité moderne et prête pour vos véhicules, devis et réseaux.',
     iconName: 'Palette',
-    tag: '+290 €',
+    tag: '+290 € (en 1 fois)',
   },
   {
     id: 'configurateur-3d',
@@ -267,7 +251,7 @@ export const BOOST_DIAGNOSTIC_CHOICES: QuizChoice<BoostChoiceId>[] = [
     description:
       'Vos clients testent leurs options en direct avant de demander leur devis.',
     iconName: 'Box',
-    tag: '+390 €',
+    tag: '+390 € (en 1 fois)',
   },
   {
     id: 'pack-legal',
@@ -275,7 +259,34 @@ export const BOOST_DIAGNOSTIC_CHOICES: QuizChoice<BoostChoiceId>[] = [
     description:
       'Textes obligatoires prêts dès le 1er jour (option relecture par avocat disponible sur devis).',
     iconName: 'Scale',
-    tag: '+120 €',
+    tag: '+120 € (en 1 fois)',
+  },
+];
+
+export const MONTHLY_GROWTH_DIAGNOSTIC_CHOICES: QuizChoice<MonthlyGrowthId>[] = [
+  {
+    id: 'seo-mensuel',
+    title: 'Suivi SEO Mensuel pour monter sur Google chaque mois',
+    description:
+      'Articles locaux, optimisation Google Business et suivi de vos positions chaque mois.',
+    iconName: 'Search',
+    tag: '149 € / mois',
+  },
+  {
+    id: 'geo-ia',
+    title: 'Référencement IA (être recommandé par ChatGPT, Gemini & Perplexity)',
+    description:
+      'Travail mensuel pour que les IA citent votre entreprise quand un client cherche votre métier.',
+    iconName: 'Compass',
+    tag: '149 € / mois',
+  },
+  {
+    id: 'sea-ads',
+    title: 'Gestion Google Ads (publicité Google, hors budget clic)',
+    description:
+      'Pilotage continu de vos campagnes pour recevoir des appels rapides et rentables.',
+    iconName: 'TrendingUp',
+    tag: '190 € / mois',
   },
 ];
 
@@ -301,28 +312,13 @@ export const CARE_DIAGNOSTIC_CHOICES: QuizChoice<CareChoiceId>[] = [
     iconName: 'Zap',
     tag: '99 €/mois · Pratique',
   },
-  {
-    id: 'seo-mensuel',
-    title: 'Suivi SEO Mensuel pour monter sur Google chaque mois (149 €/mois)',
-    description:
-      'Rédaction d’articles locaux, optimisation Google Business et suivi de vos positions chaque mois.',
-    iconName: 'Search',
-    tag: '149 €/mois · SEO',
-  },
-  {
-    id: 'croissance-seo-ia',
-    title: 'Suivi complet : SEO Google + mises à jour WhatsApp + IA (189 €/mois)',
-    description:
-      'Mises à jour illimitées + travail SEO mensuel sur Google + optimisation continue de vos outils IA.',
-    iconName: 'TrendingUp',
-    tag: '189 €/mois · Complet',
-  },
 ];
 
 export interface DiagnosticRecommendation {
   baseId: SiteNeedId;
   aiIds: AiChoiceId[];
   boostIds: BoostChoiceId[];
+  monthlyGrowthIds: MonthlyGrowthId[];
   careId: CareChoiceId;
   headline: string;
   explanation: string;
@@ -396,6 +392,7 @@ export function computeRecommendation(
     baseId,
     aiIds,
     boostIds,
+    monthlyGrowthIds: answers.monthlyGrowthChoices,
     careId: answers.care,
     headline,
     explanation: lines.join(' '),

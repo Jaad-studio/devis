@@ -27,6 +27,7 @@ interface FinalSummaryPanelProps {
   baseOption: ServiceOption;
   selectedAi: ServiceOption[];
   selectedBoosts: ServiceOption[];
+  selectedMonthlyGrowth?: ServiceOption[];
   careOption: ServiceOption;
   setupTotal: number;
   monthlyTotal: number;
@@ -41,6 +42,7 @@ export default function FinalSummaryPanel({
   baseOption,
   selectedAi,
   selectedBoosts,
+  selectedMonthlyGrowth = [],
   careOption,
   setupTotal,
   monthlyTotal,
@@ -68,6 +70,10 @@ export default function FinalSummaryPanel({
       : []),
     ...selectedAi,
     ...selectedBoosts,
+  ];
+  const monthlyItems: ServiceOption[] = [
+    ...(careOption.price > 0 ? [careOption] : []),
+    ...selectedMonthlyGrowth,
   ];
   const hasCustomQuote = oneTimeItems.some((item) => Boolean(item.isCustomQuote));
   const deposit = Math.round(setupTotal * 0.3);
@@ -100,7 +106,7 @@ export default function FinalSummaryPanel({
       timelineLabel,
       brief: combinedBrief,
       oneTimeItems,
-      monthlyItem: careOption.price > 0 ? careOption : null,
+      monthlyItems,
       setupTotal,
       monthlyTotal,
       estimatedDays,
@@ -121,9 +127,11 @@ export default function FinalSummaryPanel({
       )
       .join('\n');
     const careLine =
-      careOption.price > 0
-        ? `• Suivi mensuel : ${careOption.label} (${formatEuro(careOption.price)}/mois)`
-        : '• Suivi mensuel : Aucun abonnement';
+      monthlyItems.length > 0
+        ? monthlyItems
+            .map((item) => `• Abonnement : ${item.label} (${formatEuro(item.price)}/mois)`)
+            .join('\n')
+        : '• Abonnement mensuel : Aucun abonnement';
 
     const totalLine =
       setupTotal === 0 && hasCustomQuote
@@ -168,7 +176,7 @@ export default function FinalSummaryPanel({
       ...oneTimeItems.map(
         (o) => `${o.label} (${o.isCustomQuote ? 'Sur mesure' : formatEuro(o.price)})`
       ),
-      careOption.price > 0 ? `${careOption.label} (${formatEuro(careOption.price)}/m)` : null,
+      ...monthlyItems.map((m) => `${m.label} (${formatEuro(m.price)}/m)`),
     ]
       .filter(Boolean)
       .join(' | ');
@@ -302,15 +310,27 @@ export default function FinalSummaryPanel({
               </div>
             ))}
 
-            <div className="py-3.5 flex items-start justify-between gap-4">
-              <div>
-                <div className="text-sm font-bold text-slate-900">{careOption.label}</div>
-                <div className="text-xs text-slate-500 mt-0.5">{careOption.concreteGain}</div>
+            {monthlyItems.length === 0 ? (
+              <div className="py-3.5 flex items-start justify-between gap-4">
+                <div>
+                  <div className="text-sm font-bold text-slate-900">{careOption.label}</div>
+                  <div className="text-xs text-slate-500 mt-0.5">{careOption.concreteGain}</div>
+                </div>
+                <span className="text-sm font-extrabold text-slate-900 shrink-0">0 € / mois</span>
               </div>
-              <span className="text-sm font-extrabold text-slate-900 shrink-0">
-                {careOption.price > 0 ? `${formatEuro(careOption.price)}/mois` : '0 €'}
-              </span>
-            </div>
+            ) : (
+              monthlyItems.map((m) => (
+                <div key={m.id} className="py-3.5 flex items-start justify-between gap-4">
+                  <div>
+                    <div className="text-sm font-bold text-slate-900">{m.label}</div>
+                    <div className="text-xs text-slate-500 mt-0.5">{m.concreteGain}</div>
+                  </div>
+                  <span className="text-sm font-extrabold text-slate-900 shrink-0">
+                    {formatEuro(m.price)}/mois
+                  </span>
+                </div>
+              ))
+            )}
           </div>
 
           <div className="bg-blue-50/70 border border-blue-100 rounded-2xl p-4 flex items-start gap-3 text-xs text-slate-700">
