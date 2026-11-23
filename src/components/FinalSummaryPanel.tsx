@@ -244,7 +244,7 @@ export default function FinalSummaryPanel({
 
             <div className="bg-white/10 backdrop-blur-md border border-white/15 rounded-2xl p-5 min-w-[240px]">
               <div className="text-[11px] uppercase tracking-wider text-slate-300 font-semibold">
-                Total Création (Net)
+                Total Création (TTC)
               </div>
               <div className="font-display text-4xl font-extrabold text-white mt-0.5">
                 {setupTotal === 0 && hasCustomQuote ? 'Sur mesure' : formatEuro(setupTotal)}
@@ -336,7 +336,7 @@ export default function FinalSummaryPanel({
           <div className="bg-blue-50/70 border border-blue-100 rounded-2xl p-4 flex items-start gap-3 text-xs text-slate-700">
             <ShieldCheck className="w-4 h-4 text-blue-600 shrink-0 mt-0.5" />
             <div>
-              <strong className="text-slate-900">Tarifs nets sans surprise :</strong> {JAAD_INFO.tvaNotice}. Aucun coût caché, code et propriété transmis à 100 % à la livraison.
+              <strong className="text-slate-900">Tarifs TTC sans surprise :</strong> {JAAD_INFO.tvaNotice}. Aucun coût caché, code et propriété transmis à 100 % à la livraison.
             </div>
           </div>
         </div>

@@ -148,7 +148,7 @@ export default function LiveQuoteSidebar({
             </div>
 
             <p className="mt-2.5 text-[11px] text-slate-300 font-medium">
-              Acompte 30 % au démarrage : <strong className="text-white">{formatEuro(deposit)}</strong> · TVA non applicable (art. 293 B)
+              Acompte 30 % au démarrage : <strong className="text-white">{formatEuro(deposit)}</strong> · Prix TTC
             </p>
           </div>
 

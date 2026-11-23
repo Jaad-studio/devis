@@ -383,7 +383,7 @@ export function computeRecommendation(
   }
 
   lines.push(
-    'Tout vous appartient à 100 %, avec paiement simple en 2 fois (30 % au lancement, 70 % à la livraison) et zéro TVA ajoutée (art. 293 B du CGI).'
+    'Tout vous appartient à 100 %, avec paiement simple en 2 fois (30 % au lancement, 70 % à la livraison) et tous les prix affichés TTC sans surprise.'
   );
 
   const diagnosticSummaryText = `Besoin principal : ${FOCUS_LABEL[answers.focus]} | Outils IA : ${aiIds.length} | Base : ${baseId}`;

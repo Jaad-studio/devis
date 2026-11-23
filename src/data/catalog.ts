@@ -41,7 +41,7 @@ export const JAAD_INFO = {
   owner: 'Jâd ZORGUI',
   address: '1C rue Katia Krafft, 26100 Romans-sur-Isère',
   siret: '101 511 079 00010',
-  tvaNotice: 'TVA non applicable, art. 293 B du CGI',
+  tvaNotice: 'Tous nos tarifs sont affichés TTC',
   email: 'hello@jaad.studio',
   secondaryEmail: 'jad.zorgui07@gmail.com',
   phoneDisplay: '06 26 78 98 39',

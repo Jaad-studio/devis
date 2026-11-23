@@ -1575,7 +1575,7 @@ export default function QuoteStudio() {
                       <div className="space-y-3">
                         <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-blue-50 border border-blue-100 text-blue-700 text-[11px] font-extrabold uppercase tracking-wider">
                           <Clock className="w-3.5 h-3.5" />
-                          Mode Catalogue Direct · Tarifs nets visibles
+                          Mode Catalogue Direct · Tarifs TTC visibles
                         </div>
                         <h1 className="font-display text-3xl sm:text-5xl font-black tracking-tight text-slate-900 leading-[1.06]">
                           Composez votre projet <span className="text-blue-600">Web &amp; IA à la carte.</span>

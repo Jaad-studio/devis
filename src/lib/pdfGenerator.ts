@@ -175,7 +175,7 @@ export function generateJaadQuotePdf(data: QuotePdfPayload): void {
   doc.setTextColor(100, 116, 139);
   doc.text('PRESTATIONS SÉLECTIONNÉES', margin, y);
   doc.text('TYPE', pageWidth - margin - 42, y);
-  doc.text('TARIF NET', pageWidth - margin, y, { align: 'right' });
+  doc.text('TARIF TTC', pageWidth - margin, y, { align: 'right' });
   y += 3;
   doc.setDrawColor(203, 213, 225);
   doc.line(margin, y, pageWidth - margin, y);
@@ -270,7 +270,7 @@ export function generateJaadQuotePdf(data: QuotePdfPayload): void {
   doc.setFont('helvetica', 'bold');
   doc.setFontSize(7.5);
   doc.setTextColor(148, 163, 184);
-  doc.text('INVESTISSEMENT CRÉATION (NET À PAYER)', margin + 7, y + 8.5);
+  doc.text('INVESTISSEMENT CRÉATION (TOTAL TTC)', margin + 7, y + 8.5);
   doc.setFontSize(data.setupTotal > 0 && hasCustomQuote ? 16 : 20);
   doc.setTextColor(255, 255, 255);
   doc.text(
