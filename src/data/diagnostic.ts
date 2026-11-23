@@ -1,56 +1,44 @@
-export type SectorAnswer =
-  | 'artisan-btp'
-  | 'garage-showroom'
-  | 'commerce-resto'
-  | 'formation-coach'
-  | 'pme-b2b';
+export type FocusAnswer = 'ai-only' | 'site-and-ai' | 'site-only';
 
-export type SituationAnswer =
-  | 'local-only'
-  | 'no-site'
-  | 'old-site'
-  | 'new-launch'
-  | 'good-site';
+export type AiChoiceId =
+  | 'mini-app'
+  | 'studio-contenu-ia'
+  | 'assistant-ia-247'
+  | 'auto-workflow-ia'
+  | 'app-interne-ia'
+  | 'systeme-multi-agents';
 
-export type GoalAnswer =
-  | 'simple-contact'
-  | 'more-calls'
-  | 'premium-image'
-  | 'sell-online'
-  | 'train-sell'
-  | 'custom-platform'
-  | 'save-time';
+export type SiteNeedId =
+  | 'deja-site'
+  | 'gmb-pack'
+  | 'vitrine-essentiel'
+  | 'vitrine-impact'
+  | 'vitrine-pro'
+  | 'ecommerce-cle'
+  | 'elearning-platform'
+  | 'webapp-saas';
 
-export type DailyNeedAnswer =
-  | 'help-google'
-  | 'help-geo'
-  | 'help-sea'
-  | 'help-mini-app'
-  | 'help-whatsapp-ai'
-  | 'help-content-ia'
-  | 'help-auto-pdf'
-  | 'help-3d';
+export type BoostChoiceId =
+  | 'seo-google'
+  | 'geo-ia'
+  | 'sea-ads'
+  | 'media-drone'
+  | 'identite-logo'
+  | 'configurateur-3d'
+  | 'pack-legal';
 
-export type VisualAnswer =
-  | 'media-ok'
-  | 'need-photo'
-  | 'need-logo'
-  | 'need-legal'
-  | 'need-full';
-
-export type CareAnswer =
+export type CareChoiceId =
   | 'aucun-abo'
   | 'maint-essentielle'
   | 'maint-active'
   | 'croissance-seo-ia';
 
 export interface DiagnosticAnswers {
-  sector: SectorAnswer;
-  situation: SituationAnswer;
-  goal: GoalAnswer;
-  dailyNeeds: DailyNeedAnswer[];
-  visual: VisualAnswer;
-  care: CareAnswer;
+  focus: FocusAnswer;
+  aiChoices: AiChoiceId[];
+  siteNeed: SiteNeedId;
+  boostChoices: BoostChoiceId[];
+  care: CareChoiceId;
 }
 
 export interface QuizChoice<T extends string> {
@@ -62,527 +50,350 @@ export interface QuizChoice<T extends string> {
 }
 
 export const DEFAULT_ANSWERS: DiagnosticAnswers = {
-  sector: 'artisan-btp',
-  situation: 'no-site',
-  goal: 'more-calls',
-  dailyNeeds: ['help-google'],
-  visual: 'media-ok',
+  focus: 'site-and-ai',
+  aiChoices: [],
+  siteNeed: 'vitrine-impact',
+  boostChoices: ['seo-google'],
   care: 'maint-essentielle',
 };
 
 export const QUIZ_STEPS = [
-  { num: '01', short: 'Activité', title: '1. Quelle est votre activité ?' },
+  {
+    num: '01',
+    short: 'Votre projet',
+    title: '1. Aujourd’hui, que voulez-vous mettre en place pour votre entreprise ?',
+  },
   {
     num: '02',
-    short: 'Situation',
-    title: '2. Où en êtes-vous aujourd’hui sur Internet ?',
+    short: 'Outils & Apps IA',
+    title: '2. Quels outils IA ou applications internes vous aideraient le plus au quotidien ?',
   },
   {
     num: '03',
-    short: 'Objectif',
-    title: '3. Que voulez-vous permettre à vos clients de faire en priorité ?',
+    short: 'Site / Plateforme',
+    title: '3. Côté Site Internet ou Plateforme, de quoi avez-vous besoin ?',
   },
   {
     num: '04',
-    short: 'Visibilité & IA',
-    title: '4. Comment souhaitez-vous attirer des clients et gagner du temps ?',
-  },
-  {
-    num: '05',
-    short: 'Contenus & Suivi',
-    title: '5. Vos contenus (Photos, CGV) et le suivi après mise en ligne',
+    short: 'Google, Photos & Suivi',
+    title: '4. Dernière étape : Visibilité Google, Photos & Suivi',
   },
 ] as const;
 
-export const SECTOR_CHOICES: QuizChoice<SectorAnswer>[] = [
+export const FOCUS_CHOICES: QuizChoice<FocusAnswer>[] = [
   {
-    id: 'artisan-btp',
-    title: 'Artisan, BTP & Services locaux',
+    id: 'ai-only',
+    title: 'Créer un Outil IA ou une Application Interne pour mon entreprise',
     description:
-      'Couvreur, plombier, rénovation, dépannage, sécurité, paysagiste…',
-    iconName: 'Wrench',
-  },
-  {
-    id: 'garage-showroom',
-    title: 'Garage Auto, Showroom ou Immobilier',
-    description:
-      'Véhicules, carrosserie, cuisiniste, menuiserie, agence immobilière…',
-    iconName: 'Building2',
-  },
-  {
-    id: 'commerce-resto',
-    title: 'Boutique, Marque, Beauté ou Restauration',
-    description:
-      'Commerce, prêt-à-porter, créateur, salon de beauté, restaurant…',
-    iconName: 'ShoppingBag',
-  },
-  {
-    id: 'formation-coach',
-    title: 'Organisme de Formation, Coach ou Académie',
-    description:
-      'Cours en ligne, formations professionnelles, accompagnement, e-learning…',
-    iconName: 'GraduationCap',
-  },
-  {
-    id: 'pme-b2b',
-    title: 'PME, Cabinet, Agence ou Projet Tech / SaaS',
-    description:
-      'Entreprise B2B, bureau d’études, services, logiciel métier ou portail…',
-    iconName: 'Layers',
-  },
-];
-
-export const SITUATION_CHOICES: QuizChoice<SituationAnswer>[] = [
-  {
-    id: 'local-only',
-    title: 'Je veux juste être visible rapidement sur Google Maps dans ma ville',
-    description: 'Sans forcément créer un gros site tout de suite.',
-    iconName: 'MapPin',
-    tag: 'Rapide',
-  },
-  {
-    id: 'no-site',
-    title: 'Je n’ai pas encore de site internet',
-    description: 'Je veux créer ma première vraie vitrine professionnelle.',
-    iconName: 'Rocket',
-  },
-  {
-    id: 'old-site',
-    title: 'J’ai déjà un site, mais il date ou ne rapporte pas assez de clients',
-    description: 'Je veux monter en gamme et convertir davantage.',
-    iconName: 'Sparkles',
-  },
-  {
-    id: 'new-launch',
-    title: 'Je lance une nouvelle activité, boutique ou offre',
-    description: 'Je veux partir sur une base complète, pro et carrée.',
-    iconName: 'Crown',
-  },
-  {
-    id: 'good-site',
-    title: 'Mon site actuel me convient très bien',
-    description:
-      'Je veux uniquement lui ajouter de l’IA, du SEO / GEO ou des options ciblées.',
-    iconName: 'CheckCircle2',
-  },
-];
-
-export const GOAL_CHOICES: QuizChoice<GoalAnswer>[] = [
-  {
-    id: 'simple-contact',
-    title:
-      'Me trouver facilement, voir l’essentiel sur 1 page et m’appeler / demander un devis',
-    description: 'Clair, direct et efficace sans budget inutile.',
-    iconName: 'Rocket',
-  },
-  {
-    id: 'more-calls',
-    title:
-      'Explorer toutes mes prestations & réalisations en détail pour m’envoyer des demandes qualifiées',
-    description:
-      'Un vrai site complet qui rassure et fait sonner le téléphone.',
-    iconName: 'Search',
-    tag: 'Le plus choisi',
-  },
-  {
-    id: 'premium-image',
-    title:
-      'Vivre une expérience haut de gamme / 3D qui surclasse tous mes concurrents',
-    description: 'Positionner votre marque tout en haut de son marché.',
-    iconName: 'Crown',
-  },
-  {
-    id: 'sell-online',
-    title:
-      'Acheter mes produits en ligne 24h/24 par Carte Bancaire & Apple Pay',
-    description: 'Catalogue, panier, comptes clients et commandes automatisées.',
-    iconName: 'ShoppingBag',
-  },
-  {
-    id: 'train-sell',
-    title:
-      'Suivre mes formations / cours en ligne avec un espace élève sécurisé',
-    description: 'Modules vidéo, documents, accès privés et paiements en ligne.',
-    iconName: 'GraduationCap',
-  },
-  {
-    id: 'custom-platform',
-    title:
-      'Se connecter à une application web, un portail métier ou un SaaS sur-mesure',
-    description: 'Digitaliser votre service avec un véritable outil en ligne.',
-    iconName: 'LayoutPanelTop',
-  },
-  {
-    id: 'save-time',
-    title:
-      'Automatiser mon quotidien grâce à l’IA (devis PDF, assistant 24/7, mini-app métier)',
-    description: 'Gagner des heures chaque semaine sans payer dix logiciels.',
+      'Gagner du temps tous les jours : appli interne sur-mesure, devis PDF automatiques, rédaction Google/réseaux, assistant client 24h/24 ou tri d’emails.',
     iconName: 'Bot',
-    tag: 'Spécialité IA',
+    tag: 'Spécialité IA · Sans refaire de site',
+  },
+  {
+    id: 'site-and-ai',
+    title: 'Un Site Internet Pro + Des Outils IA pour automatiser et attirer des clients',
+    description:
+      'La totale : une vraie vitrine ou boutique moderne qui attire des clients + des outils IA qui travaillent pour moi.',
+    iconName: 'Sparkles',
+    tag: 'Le duo gagnant',
+  },
+  {
+    id: 'site-only',
+    title: 'Uniquement un Site Internet, une Boutique en ligne ou une Fiche Google',
+    description:
+      'Être bien visible sur Google, montrer mon travail proprement et recevoir plus d’appels, de devis ou de commandes.',
+    iconName: 'Rocket',
   },
 ];
 
-export const DAILY_NEED_CHOICES: QuizChoice<DailyNeedAnswer>[] = [
+export const AI_DIAGNOSTIC_CHOICES: QuizChoice<AiChoiceId>[] = [
   {
-    id: 'help-google',
-    title: 'Sortir en haut de Google & Google Maps naturellement (SEO)',
+    id: 'mini-app',
+    title: 'Une Mini-App sur mon téléphone pour un besoin précis (zéro abonnement)',
     description:
-      'Pour que les clients autour de vous tombent sur vous avant vos concurrents (+290 €).',
-    iconName: 'Search',
-    tag: 'Recommandé · +290 €',
+      'Ex concret : Calculateur de prix rapide sur chantier, petit outil de devis ou de commande interne.',
+    iconName: 'Smartphone',
+    tag: '250 € · 0 € / mois',
   },
   {
-    id: 'help-geo',
-    title:
-      'Être recommandé dans les réponses des IA comme ChatGPT & Perplexity (GEO)',
+    id: 'studio-contenu-ia',
+    title: 'Une App Interne IA qui rédige mes textes Google & posts réseaux en 2 clics',
     description:
-      'Apparaître quand un client demande un prestataire directement à une IA (+390 €).',
+      'Ex concret : Vous mettez une photo de chantier ou produit → l’application écrit le texte parfait toute seule.',
+    iconName: 'Wand2',
+    tag: '490 €',
+  },
+  {
+    id: 'assistant-ia-247',
+    title: 'Un Assistant IA qui répond aux clients 24h/24 sur mon site & WhatsApp',
+    description:
+      'Ex concret : Renseigne vos vrais tarifs le soir et le week-end et prend le numéro du client.',
+    iconName: 'Bot',
+    tag: '490 €',
+  },
+  {
+    id: 'auto-workflow-ia',
+    title: 'Génération automatique de mes Devis PDF, Factures & Relances clients',
+    description:
+      'Ex concret : Plus de paperasse le soir, les devis PDF propres et les relances partent tout seuls.',
+    iconName: 'Workflow',
+    tag: '690 €',
+  },
+  {
+    id: 'app-interne-ia',
+    title: 'Une Application Interne IA pour gérer mon activité (chantiers, stock, équipe)',
+    description:
+      'Ex concret : Notes vocales résumées par IA, suivi photo par dossier, gestion véhicules ou planning.',
+    iconName: 'Layers',
+    tag: '890 € · App interne',
+  },
+  {
+    id: 'systeme-multi-agents',
+    title: 'Un Assistant IA Administratif complet (tri d’emails, lecture de factures, prospection)',
+    description:
+      'Ex concret : L’IA lit vos mails et documents PDF, prépare les réponses et classe tout pour vous.',
+    iconName: 'Cpu',
+    tag: 'Dès 1 290 € · Sur-mesure',
+  },
+];
+
+export const SITE_NEED_CHOICES: QuizChoice<SiteNeedId>[] = [
+  {
+    id: 'deja-site',
+    title: 'Pas besoin de créer de site internet',
+    description:
+      'Je veux uniquement mes outils IA / applications internes (ou j’ai déjà un site qui me convient).',
+    iconName: 'CheckCircle2',
+    tag: '0 € de création site',
+  },
+  {
+    id: 'gmb-pack',
+    title: 'Juste une Fiche Google Maps optimisée pour sortir dans ma ville',
+    description:
+      'Idéal pour recevoir des appels locaux rapidement sans créer un site complet.',
+    iconName: 'MapPin',
+    tag: '290 €',
+  },
+  {
+    id: 'vitrine-essentiel',
+    title: 'Un Site Simple & Pro en 1 page pour présenter l’essentiel',
+    description:
+      'Parfait pour être crédible tout de suite et être appelé facilement sur téléphone.',
+    iconName: 'Rocket',
+    tag: '690 €',
+  },
+  {
+    id: 'vitrine-impact',
+    title: 'Un Site Complet (plusieurs pages) pour montrer mes services, photos & avis',
+    description:
+      'Le format idéal pour rassurer les clients et recevoir des demandes de devis qualifiées.',
     iconName: 'Sparkles',
-    tag: 'Nouveau · +390 €',
+    tag: 'Le plus demandé · 890 €',
   },
   {
-    id: 'help-sea',
-    title: 'Recevoir des clients tout de suite avec la publicité Google (SEA)',
+    id: 'vitrine-pro',
+    title: 'Un Site Haut de Gamme avec animations ou expérience 3D',
+    description: 'Pour marquer les esprits et surclasser tous vos concurrents.',
+    iconName: 'Crown',
+    tag: '1 290 €',
+  },
+  {
+    id: 'ecommerce-cle',
+    title: 'Une Boutique en ligne pour vendre mes produits par Carte Bancaire',
+    description: 'Catalogue, panier, paiement CB / Apple Pay et gestion des commandes.',
+    iconName: 'ShoppingBag',
+    tag: '1 490 €',
+  },
+  {
+    id: 'elearning-platform',
+    title: 'Une Plateforme pour vendre mes Formations / Cours en ligne',
+    description: 'Espace élève avec mot de passe, vidéos, PDF et paiement en ligne.',
+    iconName: 'GraduationCap',
+    tag: '1 490 €',
+  },
+  {
+    id: 'webapp-saas',
+    title: 'Un Portail Client ou Logiciel en ligne sur-mesure (Application / SaaS)',
+    description: 'Espace client privé, portail grossiste ou plateforme métier complète.',
+    iconName: 'LayoutPanelTop',
+    tag: 'Dès 1 990 €',
+  },
+];
+
+export const BOOST_DIAGNOSTIC_CHOICES: QuizChoice<BoostChoiceId>[] = [
+  {
+    id: 'seo-google',
+    title: 'Être placé en haut de Google dans ma ville (Référencement Google)',
     description:
-      'Campagnes ciblées prêtes à déclencher des appels dès les premiers jours (+390 €).',
+      'Pour que les clients autour de vous tombent sur votre entreprise sans payer de pub à chaque clic.',
+    iconName: 'Search',
+    tag: '+290 €',
+  },
+  {
+    id: 'geo-ia',
+    title: 'Être recommandé par ChatGPT quand un client cherche mon métier',
+    description:
+      'Quand quelqu’un demande un bon pro sur ChatGPT ou Perplexity, votre nom ressort.',
+    iconName: 'Sparkles',
+    tag: '+390 € · Nouveau',
+  },
+  {
+    id: 'sea-ads',
+    title: 'Lancer de la publicité Google pour avoir des appels dès la 1re semaine',
+    description:
+      'Vos annonces apparaissent tout en haut de Google dès le lancement (hors budget pub Google).',
     iconName: 'TrendingUp',
     tag: '+390 €',
   },
   {
-    id: 'help-mini-app',
-    title:
-      'Avoir ma propre Mini-App métier privée sans abonnement (devis, SEO, stock)',
+    id: 'media-drone',
+    title: 'Faire venir JAAD Studio pour un Shooting Photo, Vidéo & Drone 4K',
     description:
-      'Installable sur téléphone, pensée pour un besoin concret sans frais mensuels (+250 €).',
-    iconName: 'Smartphone',
-    tag: '+250 €',
-  },
-  {
-    id: 'help-whatsapp-ai',
-    title:
-      'Un assistant IA qui répond aux clients 24h/24 sur mon site & WhatsApp',
-    description:
-      'Renseigne vos tarifs/services même le soir et le week-end et qualifie le prospect (+490 €).',
-    iconName: 'Bot',
-    tag: '+490 €',
-  },
-  {
-    id: 'help-content-ia',
-    title: 'Générer mes posts réseaux & articles Google en 2 clics (Studio IA)',
-    description:
-      'Votre propre générateur privé adapté à votre ton et vos mots-clés (+490 €).',
-    iconName: 'Wand2',
-    tag: '+490 €',
-  },
-  {
-    id: 'help-auto-pdf',
-    title: 'Automatiser mes devis PDF, dossiers et relances clients',
-    description:
-      'Fini les copier-coller le soir : tout part et se classe automatiquement (+690 €).',
-    iconName: 'Workflow',
-    tag: '+690 €',
-  },
-  {
-    id: 'help-3d',
-    title: 'Intégrer un simulateur ou configurateur 3D interactif',
-    description:
-      'Vos visiteurs visualisent ou chiffrent leurs choix avant de vous contacter (+390 €).',
-    iconName: 'Box',
-    tag: '+390 €',
-  },
-];
-
-export const VISUAL_CHOICES: QuizChoice<VisualAnswer>[] = [
-  {
-    id: 'media-ok',
-    title: 'Oui, j’ai déjà mes visuels et mentions prêtes',
-    description: 'Aucune option visuelle ou juridique supplémentaire à prévoir.',
-    iconName: 'Check',
-    tag: '0 €',
-  },
-  {
-    id: 'need-photo',
-    title: 'Je veux un vrai shooting photo, vidéo & drone 4K sur place',
-    description: 'De vraies images de votre équipe, locaux ou chantiers.',
+      'De vraies images de votre équipe, atelier ou chantiers pour remplacer les photos génériques.',
     iconName: 'Camera',
     tag: '+390 €',
   },
   {
-    id: 'need-logo',
-    title: 'J’aimerais créer ou moderniser mon logo & mes cartes pro',
-    description: 'Identité visuelle vectorielle + cartes prêtes à imprimer.',
+    id: 'identite-logo',
+    title: 'Créer ou moderniser mon Logo & mes Cartes de visite',
+    description: 'Une identité moderne et prête pour vos véhicules, devis et réseaux.',
     iconName: 'Palette',
     tag: '+290 €',
   },
   {
-    id: 'need-legal',
-    title: 'Je veux être carré sur le juridique (Mentions, RGPD, trame CGV)',
-    description: 'Conformité de base (option relecture par avocat sur devis).',
+    id: 'configurateur-3d',
+    title: 'Ajouter un simulateur de prix / configurateur interactif',
+    description:
+      'Vos clients testent leurs options en direct avant de demander leur devis.',
+    iconName: 'Box',
+    tag: '+390 €',
+  },
+  {
+    id: 'pack-legal',
+    title: 'Rédiger mes Mentions légales, RGPD & Conditions Générales (CGV)',
+    description:
+      'Textes obligatoires prêts dès le 1er jour (option relecture par avocat disponible sur devis).',
     iconName: 'Scale',
     tag: '+120 €',
   },
-  {
-    id: 'need-full',
-    title: 'Pack complet : Photo / Drone 4K + Logo & Cartes + Pack Légal RGPD',
-    description: 'Toute votre image et vos textes légaux gérés en une fois.',
-    iconName: 'Sparkles',
-    tag: '+800 €',
-  },
 ];
 
-export const CARE_CHOICES: QuizChoice<CareAnswer>[] = [
+export const CARE_DIAGNOSTIC_CHOICES: QuizChoice<CareChoiceId>[] = [
   {
     id: 'aucun-abo',
-    title: 'Je préfère être 100 % autonome, sans abonnement',
-    description: 'Vous réglez uniquement la création et gardez 100 % la main.',
+    title: 'Je gère tout seul — 0 € / mois (Aucun abonnement)',
+    description: 'Vous payez uniquement la création et gardez 100 % la main.',
     iconName: 'Check',
     tag: '0 €/mois',
   },
   {
     id: 'maint-essentielle',
-    title: 'Maintenance & support technique tranquille',
-    description: 'Hébergement, domaine, sauvegardes, SSL et petites modifs.',
+    title: 'Vous gérez l’hébergement, la sécurité et la technique (49 €/mois)',
+    description: 'Nom de domaine, sauvegardes, sécurité et petites modifications.',
     iconName: 'ShieldCheck',
     tag: '49 €/mois',
   },
   {
     id: 'maint-active',
-    title: 'Gestion Active WhatsApp (mises à jour illimitées par message)',
-    description:
-      'Vous envoyez vos nouveautés / véhicules / chantiers sur WhatsApp, on publie.',
+    title: 'Je vous envoie mes nouveautés sur WhatsApp et vous mettez tout à jour (99 €/mois)',
+    description: 'Photos, véhicules, chantiers ou promos ajoutés pour vous chaque semaine.',
     iconName: 'Zap',
-    tag: '99 €/mois',
+    tag: '99 €/mois · Pratique',
   },
   {
     id: 'croissance-seo-ia',
-    title: 'Suivi SEO mensuel & optimisation continue IA',
+    title: 'Suivi complet : mises à jour + nouveaux contenus Google chaque mois (189 €/mois)',
     description:
-      'Gestion active + rédaction SEO mensuelle pour grimper sur Google.',
+      'Mises à jour illimitées + travail régulier pour monter sur Google et ajuster vos outils IA.',
     iconName: 'TrendingUp',
     tag: '189 €/mois',
   },
 ];
 
 export interface DiagnosticRecommendation {
-  baseId: string;
-  alternativeBaseIds: string[];
-  aiIds: string[];
-  boostIds: string[];
-  matrixRecommendedIds: string[];
-  recommendedCareId: string;
-  careId: string;
-  diagnosticHeadline: string;
-  diagnosticReasoning: string;
-  reasonsByItemId: Record<string, string>;
+  baseId: SiteNeedId;
+  aiIds: AiChoiceId[];
+  boostIds: BoostChoiceId[];
+  careId: CareChoiceId;
+  headline: string;
+  explanation: string;
   diagnosticSummaryText: string;
 }
 
-const SECTOR_LABEL: Record<SectorAnswer, string> = {
-  'artisan-btp': 'Artisan / BTP / Services locaux',
-  'garage-showroom': 'Garage / Showroom / Immobilier',
-  'commerce-resto': 'Boutique / Marque / Restauration',
-  'formation-coach': 'Organisme de Formation / Coach',
-  'pme-b2b': 'PME / Cabinet / Projet Tech',
-};
-
-const SITUATION_LABEL: Record<SituationAnswer, string> = {
-  'local-only': 'Priorité visibilité Google Maps locale',
-  'no-site': 'Pas encore de site internet',
-  'old-site': 'Refonte pour mieux convertir',
-  'new-launch': 'Lancement de nouvelle activité / offre',
-  'good-site': 'Site actuel conservé',
-};
-
-const GOAL_LABEL: Record<GoalAnswer, string> = {
-  'simple-contact': 'Site 1 page / contact rapide',
-  'more-calls': 'Générer des appels et devis qualifiés',
-  'premium-image': 'Image haut de gamme & 3D',
-  'sell-online': 'Vendre en ligne 24h/24',
-  'train-sell': 'Former et vendre des cours en ligne',
-  'custom-platform': 'Digitaliser via Application / SaaS',
-  'save-time': 'Gagner du temps avec l’IA',
-};
-
-const MATRIX_R_BY_BASE: Record<string, string[]> = {
-  'gmb-pack': ['seo-google', 'media-drone'],
-  'vitrine-essentiel': ['seo-google', 'media-drone'],
-  'vitrine-impact': ['seo-google', 'geo-ia', 'media-drone'],
-  'vitrine-pro': ['seo-google', 'geo-ia', 'media-drone'],
-  'ecommerce-cle': ['pack-legal'],
-  'elearning-platform': ['seo-google', 'pack-legal'],
-  'webapp-saas': ['media-drone'],
-  'deja-site': ['seo-google', 'geo-ia', 'mini-app'],
+const FOCUS_LABEL: Record<FocusAnswer, string> = {
+  'ai-only': 'Outils IA & Applications Internes',
+  'site-and-ai': 'Site Internet + Outils IA',
+  'site-only': 'Site Internet / Visibilité Google',
 };
 
 export function computeRecommendation(
   answers: DiagnosticAnswers
 ): DiagnosticRecommendation {
-  // 1. Choose the right Socle
-  let baseId = 'vitrine-impact';
+  const baseId: SiteNeedId = answers.siteNeed;
+  // If user specifically chose "AI only" and forgot to check an AI item on step 2, pre-select Mini-App
+  const aiIds: AiChoiceId[] =
+    answers.focus === 'ai-only' && answers.aiChoices.length === 0
+      ? ['mini-app']
+      : answers.aiChoices;
 
-  if (answers.situation === 'good-site' && answers.goal === 'save-time') {
-    baseId = 'deja-site';
-  } else if (
-    answers.goal === 'train-sell' ||
-    (answers.sector === 'formation-coach' && answers.goal === 'sell-online')
-  ) {
-    baseId = 'elearning-platform';
-  } else if (answers.goal === 'sell-online') {
-    baseId = 'ecommerce-cle';
-  } else if (answers.goal === 'custom-platform') {
-    baseId = 'webapp-saas';
-  } else if (
-    answers.situation === 'local-only' &&
-    answers.goal !== 'premium-image' &&
-    answers.goal !== 'save-time'
-  ) {
-    baseId = 'gmb-pack';
-  } else if (answers.goal === 'simple-contact') {
-    baseId = 'vitrine-essentiel';
-  } else if (answers.goal === 'premium-image') {
-    baseId = 'vitrine-pro';
+  // Avoid double-charging SEO local when they picked the standalone Google Maps fiche at 290 €
+  const boostIds: BoostChoiceId[] =
+    baseId === 'gmb-pack'
+      ? answers.boostChoices.filter((b) => b !== 'seo-google')
+      : answers.boostChoices;
+
+  const hasSite = baseId !== 'deja-site';
+  const hasAi = aiIds.length > 0;
+
+  let headline = 'Voici votre projet sur-mesure';
+  if (!hasSite && hasAi) {
+    headline = 'Votre solution sur-mesure : Outils IA & Application Interne';
+  } else if (hasSite && hasAi) {
+    headline = 'Votre duo gagnant : Site / Plateforme + Outils IA sur-mesure';
+  } else if (baseId === 'gmb-pack') {
+    headline = 'Votre projet : Être visible rapidement sur Google Maps';
+  } else if (baseId === 'ecommerce-cle') {
+    headline = 'Votre projet : Boutique en Ligne Clé en Main (24h/24)';
+  } else if (baseId === 'elearning-platform') {
+    headline = 'Votre projet : Plateforme de Formation en Ligne (E-Learning)';
+  } else if (baseId === 'webapp-saas') {
+    headline = 'Votre projet : Portail Client ou Plateforme Métier Sur-Mesure';
+  } else if (hasSite) {
+    headline = 'Votre solution web clé en main sur-mesure';
+  }
+
+  const lines: string[] = [];
+  if (!hasSite && hasAi) {
+    lines.push(
+      `Vous avez choisi de vous concentrer à 100 % sur vos outils IA (${aiIds.length} solution${aiIds.length > 1 ? 's' : ''}) sans frais inutiles de création de site.`
+    );
+  } else if (hasSite && hasAi) {
+    lines.push(
+      `Vous combinez une vraie présence professionnelle en ligne avec ${aiIds.length} outil${aiIds.length > 1 ? 's' : ''} IA conçu${aiIds.length > 1 ? 's' : ''} pour vous faire gagner du temps chaque semaine.`
+    );
+  } else if (hasSite) {
+    lines.push(
+      'Votre projet est cadré de façon claire : pas de superflu, uniquement les éléments indispensables pour rassurer vos clients et générer des demandes.'
+    );
   } else {
-    baseId = 'vitrine-impact';
-  }
-
-  // 2. Quick alternative socles to compare in 1 click
-  const altMap: Record<string, string[]> = {
-    'gmb-pack': ['vitrine-essentiel', 'vitrine-impact'],
-    'vitrine-essentiel': ['gmb-pack', 'vitrine-impact', 'vitrine-pro'],
-    'vitrine-impact': ['vitrine-essentiel', 'vitrine-pro', 'deja-site'],
-    'vitrine-pro': ['vitrine-impact', 'vitrine-essentiel'],
-    'ecommerce-cle': ['vitrine-impact', 'elearning-platform', 'webapp-saas'],
-    'elearning-platform': ['ecommerce-cle', 'webapp-saas'],
-    'webapp-saas': ['vitrine-pro', 'ecommerce-cle'],
-    'deja-site': ['vitrine-impact', 'vitrine-essentiel'],
-  };
-  const alternativeBaseIds = altMap[baseId] || ['vitrine-impact', 'vitrine-essentiel'];
-
-  // 3. AI items selected directly from user answers
-  const aiSet = new Set<string>();
-  if (answers.dailyNeeds.includes('help-mini-app')) aiSet.add('mini-app');
-  if (answers.dailyNeeds.includes('help-whatsapp-ai')) aiSet.add('assistant-ia-247');
-  if (answers.dailyNeeds.includes('help-content-ia')) aiSet.add('studio-contenu-ia');
-  if (answers.dailyNeeds.includes('help-auto-pdf')) aiSet.add('auto-workflow-ia');
-  if (answers.goal === 'save-time' && aiSet.size === 0) {
-    aiSet.add('mini-app');
-  }
-  const aiIds = Array.from(aiSet);
-
-  // 4. Boosts & Visuals / Legal
-  const boostSet = new Set<string>();
-  if (answers.dailyNeeds.includes('help-google') && baseId !== 'gmb-pack') {
-    boostSet.add('seo-google');
-  }
-  if (answers.dailyNeeds.includes('help-geo')) boostSet.add('geo-ia');
-  if (answers.dailyNeeds.includes('help-sea')) boostSet.add('sea-ads');
-  if (answers.dailyNeeds.includes('help-3d')) boostSet.add('configurateur-3d');
-
-  if (answers.visual === 'need-logo' || answers.visual === 'need-full') {
-    boostSet.add('identite-logo');
-  }
-  if (answers.visual === 'need-photo' || answers.visual === 'need-full') {
-    boostSet.add('media-drone');
-  }
-  if (answers.visual === 'need-legal' || answers.visual === 'need-full') {
-    boostSet.add('pack-legal');
-  }
-  const boostIds = Array.from(boostSet);
-
-  // 5. Matrix Recommended (R) IDs for the chosen Socle
-  const matrixRecommendedIds = MATRIX_R_BY_BASE[baseId] || ['seo-google', 'media-drone'];
-  const recommendedCareId =
-    baseId === 'webapp-saas'
-      ? 'maint-active'
-      : baseId === 'gmb-pack'
-        ? 'aucun-abo'
-        : 'maint-essentielle';
-
-  // 6. Per-item plain-French reasons
-  const reasonsByItemId: Record<string, string> = {
-    'gmb-pack':
-      'Recommandé pour vous car vous voulez être visible vite sur Google Maps localement sans partir sur un site complexe.',
-    'vitrine-essentiel':
-      'Recommandé pour vous car vous cherchez une page claire et pro qui permet de vous contacter immédiatement.',
-    'vitrine-impact':
-      'Recommandé pour vous car ce format multipage rassure vos prospects locaux et génère régulièrement appels et devis.',
-    'vitrine-pro':
-      'Recommandé pour vous car vous visez une image haut de gamme avec effet 3D qui surclasse vos concurrents.',
-    'ecommerce-cle':
-      'Recommandé pour vous car vous voulez vendre vos produits en ligne 24h/24 par Carte & Apple Pay.',
-    'elearning-platform':
-      'Recommandé pour vous car vous voulez héberger et vendre vos cours ou formations dans un espace élève sécurisé.',
-    'webapp-saas':
-      'Recommandé pour vous car votre besoin demande une plateforme métier sur-mesure (comptes, données, workflows).',
-    'deja-site':
-      'Recommandé pour vous car votre site actuel vous convient : aucun socle inutile facturé.',
-    'mini-app':
-      'Outil concret (calculateur, générateur SEO, devis) sans abonnement mensuel caché.',
-    'assistant-ia-247':
-      'Répond aux prospects 24h/24 sur votre site et WhatsApp et vous envoie le contact qualifié.',
-    'studio-contenu-ia':
-      'Génère vos fiches Google, articles SEO et posts réseaux à votre image en 2 clics.',
-    'auto-workflow-ia':
-      'Automatise vos devis PDF et relances clients pour supprimer la saisie manuelle.',
-    'seo-google':
-      'Option R (Recommandée) : optimise votre présence naturelle sur Google et Google Maps dans votre secteur.',
-    'geo-ia':
-      'Option R (Recommandée) : positionne votre entreprise dans les réponses de ChatGPT, Gemini et Perplexity.',
-    'sea-ads':
-      'Déclenche des demandes immédiates via des campagnes ciblées Google Ads.',
-    'configurateur-3d':
-      'Permet au visiteur de simuler ou visualiser son choix en direct avant de demander un devis.',
-    'identite-logo':
-      'Logo vectoriel et cartes de visite professionnelles pour inspirer confiance dès le premier regard.',
-    'media-drone':
-      'Option R (Recommandée) : vraies photos et vidéos/drone de votre activité (10x plus crédible qu’une image générique).',
-    'pack-legal':
-      'Option R E-Commerce/Formation : mentions légales, RGPD et structure CGV conformes (option avocat disponible).',
-  };
-
-  // 7. Headline & Reasoning
-  const sectorName = SECTOR_LABEL[answers.sector];
-  const situationName = SITUATION_LABEL[answers.situation];
-  const goalName = GOAL_LABEL[answers.goal];
-
-  const headlineMap: Record<string, string> = {
-    'gmb-pack': 'Votre solution idéale : Visibilité Locale Google My Business',
-    'vitrine-essentiel': 'Votre solution idéale : Site One-Page clair & efficace',
-    'vitrine-impact': `Votre solution idéale : Site Multipage d’acquisition (${sectorName})`,
-    'vitrine-pro': `Votre solution idéale : Site Signature Haut de Gamme + 3D`,
-    'ecommerce-cle': 'Votre solution idéale : Boutique E-Commerce Clé en Main',
-    'elearning-platform': 'Votre solution idéale : Plateforme E-Learning & Formations',
-    'webapp-saas': 'Votre solution idéale : Application Web / Plateforme Sur-Mesure',
-    'deja-site': 'Votre plan d’action : booster votre site existant (IA & Acquisition)',
-  };
-
-  const parts: string[] = [
-    `D’après votre activité (${sectorName}) et votre priorité (« ${goalName.toLowerCase()} »), nous vous recommandons ce socle avec toutes ses inclusions de base déjà comprises.`,
-  ];
-
-  if (answers.situation === 'good-site' && baseId !== 'deja-site') {
-    parts.push(
-      'Comme vous êtes satisfait de votre site actuel, vous pouvez aussi basculer en 1 clic sur « J’ai déjà mon site (0 €) » ci-dessous si vous souhaitez n’ajouter que les modules.'
+    lines.push(
+      'Sélectionnez au moins un outil IA, une fiche Google ou un type de site ci-dessous pour chiffrer votre projet.'
     );
   }
 
-  parts.push(
-    'Vous pouvez activer ou retirer chaque complément recommandé (marqué R) ou option en 1 clic ci-dessous pour ajuster votre budget exact.'
+  lines.push(
+    'Tout vous appartient à 100 %, avec paiement simple en 2 fois (30 % au lancement, 70 % à la livraison) et zéro TVA ajoutée (art. 293 B du CGI).'
   );
 
-  const diagnosticSummaryText = `Diagnostic JAAD : ${sectorName} | Situation : ${situationName} | Priorité : ${goalName}`;
+  const diagnosticSummaryText = `Besoin principal : ${FOCUS_LABEL[answers.focus]} | Outils IA : ${aiIds.length} | Base : ${baseId}`;
 
   return {
     baseId,
-    alternativeBaseIds,
     aiIds,
     boostIds,
-    matrixRecommendedIds,
-    recommendedCareId,
     careId: answers.care,
-    diagnosticHeadline: headlineMap[baseId] || headlineMap['vitrine-impact'],
-    diagnosticReasoning: parts.join(' '),
-    reasonsByItemId,
+    headline,
+    explanation: lines.join(' '),
     diagnosticSummaryText,
   };
 }
