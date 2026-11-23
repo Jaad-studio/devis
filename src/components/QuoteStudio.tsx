@@ -409,17 +409,18 @@ export default function QuoteStudio() {
 
       {/* Top Navigation */}
       <header className="sticky top-0 z-40 bg-white/90 backdrop-blur-xl border-b border-slate-200/80">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5 flex items-center justify-between gap-3">
-          <div className="flex items-center gap-3">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex items-center justify-between gap-2 sm:gap-3">
+          <div className="flex items-center gap-2.5 sm:gap-3 min-w-0">
             <span className="w-9 h-9 rounded-xl bg-slate-900 text-white font-display font-black text-lg flex items-center justify-center shadow-sm shrink-0">
               J<span className="text-blue-500">.</span>
             </span>
-            <div>
-              <div className="font-display font-black text-base sm:text-lg tracking-tight text-slate-900 leading-none">
+            <div className="min-w-0">
+              <div className="font-display font-black text-base sm:text-lg tracking-tight text-slate-900 leading-none truncate">
                 JAAD <span className="text-blue-600">STUDIO.</span>
               </div>
-              <div className="text-[9.5px] font-bold uppercase tracking-widest text-slate-400 mt-0.5">
-                Sites Web, Outils IA &amp; Applications Internes
+              <div className="text-[9.5px] font-bold uppercase tracking-wider sm:tracking-widest text-slate-400 mt-0.5 truncate">
+                <span className="sm:hidden">Web &amp; Apps IA</span>
+                <span className="hidden sm:inline">Sites Web, Outils IA &amp; Applications Internes</span>
               </div>
             </div>
           </div>
@@ -501,10 +502,13 @@ export default function QuoteStudio() {
                 setMode(mode === 'diagnostic' ? 'catalog' : 'diagnostic');
                 scrollTopSmooth();
               }}
-              className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full border border-slate-200 bg-slate-50 hover:bg-slate-900 hover:text-white hover:border-slate-900 text-xs font-bold text-slate-700 transition-colors"
+              className="inline-flex items-center gap-1.5 px-3 sm:px-3.5 py-2 rounded-full border border-slate-200 bg-slate-50 hover:bg-slate-900 hover:text-white hover:border-slate-900 text-xs font-bold text-slate-700 transition-colors whitespace-nowrap"
             >
-              <Sliders className="w-3.5 h-3.5" />
-              <span>{mode === 'diagnostic' ? 'Catalogue complet' : 'Questions guidées'}</span>
+              <Sliders className="w-3.5 h-3.5 shrink-0" />
+              <span className="sm:hidden">{mode === 'diagnostic' ? 'Catalogue' : 'Questions'}</span>
+              <span className="hidden sm:inline">
+                {mode === 'diagnostic' ? 'Catalogue complet' : 'Questions guidées'}
+              </span>
             </button>
 
             <a
@@ -986,14 +990,15 @@ export default function QuoteStudio() {
                   <button
                     type="button"
                     onClick={() => {
+                      if (advanceTimerRef.current) clearTimeout(advanceTimerRef.current);
                       const next = quizStep + 1;
                       setQuizStep(next);
                       setMaxVisitedStep((prev) => Math.max(prev, next));
                       scrollTopSmooth();
                     }}
-                    className="inline-flex items-center gap-1.5 text-xs font-bold text-blue-600 hover:text-blue-700 transition-colors"
+                    className="inline-flex items-center gap-2 px-5 py-3 rounded-2xl bg-slate-900 hover:bg-blue-600 text-white text-xs font-extrabold uppercase tracking-wider transition-colors"
                   >
-                    <span>Continuer</span>
+                    <span>Continuer (Question {quizStep + 2}/{QUIZ_STEPS.length})</span>
                     <ArrowRight className="w-4 h-4" />
                   </button>
                 </div>
