@@ -31,6 +31,8 @@ interface FinalSummaryPanelProps {
   setupTotal: number;
   monthlyTotal: number;
   estimatedDays: number;
+  diagnosticContext?: string;
+  showBanner?: boolean;
   onResetAll: () => void;
   onEditStep: (stepIndex: number) => void;
 }
@@ -43,6 +45,8 @@ export default function FinalSummaryPanel({
   setupTotal,
   monthlyTotal,
   estimatedDays,
+  diagnosticContext = '',
+  showBanner = true,
   onResetAll,
   onEditStep,
 }: FinalSummaryPanelProps) {
@@ -62,6 +66,8 @@ export default function FinalSummaryPanel({
   const deposit = Math.round(setupTotal * 0.3);
   const timelineLabel =
     TIMELINE_CHOICES.find((item) => item.id === timeline)?.label || 'À définir';
+
+  const combinedBrief = [diagnosticContext.trim(), brief.trim()].filter(Boolean).join(' — ');
 
   const hasValidContact =
     company.trim().length > 1 ||
@@ -85,7 +91,7 @@ export default function FinalSummaryPanel({
       email: email.trim(),
       phone: phone.trim(),
       timelineLabel,
-      brief: brief.trim(),
+      brief: combinedBrief,
       oneTimeItems,
       monthlyItem: careOption.price > 0 ? careOption : null,
       setupTotal,
@@ -121,7 +127,7 @@ export default function FinalSummaryPanel({
       '',
       `Total Création : ${formatEuro(setupTotal)} (Acompte 30 % : ${formatEuro(deposit)})`,
       monthlyTotal > 0 ? `Abonnement : ${formatEuro(monthlyTotal)}/mois` : null,
-      brief.trim() ? `\nPrécisions : ${brief.trim()}` : null,
+      combinedBrief ? `\nPrécisions : ${combinedBrief}` : null,
     ]
       .filter(Boolean)
       .join('\n');
@@ -164,7 +170,7 @@ export default function FinalSummaryPanel({
             client_phone: phone.trim() || 'Non renseigné',
             total_setup: new Intl.NumberFormat('fr-FR').format(setupTotal),
             total_monthly: new Intl.NumberFormat('fr-FR').format(monthlyTotal),
-            selected_options: `${optionsList}${brief.trim() ? ` — Brief : ${brief.trim()}` : ''}`,
+            selected_options: `${optionsList}${combinedBrief ? ` — Brief : ${combinedBrief}` : ''}`,
           },
         }),
       });
@@ -193,47 +199,49 @@ export default function FinalSummaryPanel({
   return (
     <div className="space-y-8">
       {/* Header Summary Card */}
-      <div className="bg-slate-900 text-white rounded-3xl p-6 sm:p-10 shadow-2xl relative overflow-hidden">
-        <div className="absolute -top-24 -right-24 w-72 h-72 bg-blue-600/20 rounded-full blur-3xl pointer-events-none" />
-        <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
-          <div className="space-y-2">
-            <span className="inline-flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-[0.2em] text-blue-400">
-              <Sparkles className="w-3.5 h-3.5" />
-              Votre Devis Personnalisé est Prêt
-            </span>
-            <h2 className="font-display text-3xl sm:text-4xl font-black tracking-tight">
-              Récapitulatif sur-mesure
-            </h2>
-            <p className="text-sm text-slate-300 max-w-xl">
-              Téléchargez votre devis PDF officiel JAAD Studio, ou transmettez cette configuration en 1 clic par WhatsApp ou Email pour valider ensemble.
-            </p>
-          </div>
+      {showBanner && (
+        <div className="bg-slate-900 text-white rounded-3xl p-6 sm:p-10 shadow-2xl relative overflow-hidden">
+          <div className="absolute -top-24 -right-24 w-72 h-72 bg-blue-600/20 rounded-full blur-3xl pointer-events-none" />
+          <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
+            <div className="space-y-2">
+              <span className="inline-flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-[0.2em] text-blue-400">
+                <Sparkles className="w-3.5 h-3.5" />
+                Votre Devis Personnalisé est Prêt
+              </span>
+              <h2 className="font-display text-3xl sm:text-4xl font-black tracking-tight">
+                Récapitulatif sur-mesure
+              </h2>
+              <p className="text-sm text-slate-300 max-w-xl">
+                Téléchargez votre devis PDF officiel JAAD Studio, ou transmettez cette configuration en 1 clic par WhatsApp ou Email pour valider ensemble.
+              </p>
+            </div>
 
-          <div className="bg-white/10 backdrop-blur-md border border-white/15 rounded-2xl p-5 min-w-[240px]">
-            <div className="text-[11px] uppercase tracking-wider text-slate-300 font-semibold">
-              Total Création (Net)
-            </div>
-            <div className="font-display text-4xl font-extrabold text-white mt-0.5">
-              {formatEuro(setupTotal)}
-            </div>
-            {monthlyTotal > 0 && (
-              <div className="text-sm font-bold text-blue-400 mt-1">
-                + {formatEuro(monthlyTotal)} / mois
+            <div className="bg-white/10 backdrop-blur-md border border-white/15 rounded-2xl p-5 min-w-[240px]">
+              <div className="text-[11px] uppercase tracking-wider text-slate-300 font-semibold">
+                Total Création (Net)
               </div>
-            )}
-            <div className="mt-3 pt-3 border-t border-white/10 text-[11px] text-slate-300 space-y-1">
-              <div className="flex justify-between">
-                <span>Acompte 30 % :</span>
-                <strong className="text-white">{formatEuro(deposit)}</strong>
+              <div className="font-display text-4xl font-extrabold text-white mt-0.5">
+                {formatEuro(setupTotal)}
               </div>
-              <div className="flex justify-between">
-                <span>Délai estimé :</span>
-                <strong className="text-white">~{estimatedDays} jours</strong>
+              {monthlyTotal > 0 && (
+                <div className="text-sm font-bold text-blue-400 mt-1">
+                  + {formatEuro(monthlyTotal)} / mois
+                </div>
+              )}
+              <div className="mt-3 pt-3 border-t border-white/10 text-[11px] text-slate-300 space-y-1">
+                <div className="flex justify-between">
+                  <span>Acompte 30 % :</span>
+                  <strong className="text-white">{formatEuro(deposit)}</strong>
+                </div>
+                <div className="flex justify-between">
+                  <span>Délai estimé :</span>
+                  <strong className="text-white">~{estimatedDays} jours</strong>
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
+      )}
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
         {/* Left 6 Cols: Breakdown of selected items */}
@@ -242,13 +250,15 @@ export default function FinalSummaryPanel({
             <h3 className="font-display text-lg font-extrabold text-slate-900">
               Détail des prestations
             </h3>
-            <button
-              type="button"
-              onClick={() => onEditStep(1)}
-              className="text-xs font-bold text-blue-600 hover:underline"
-            >
-              Modifier les choix
-            </button>
+            {showBanner && (
+              <button
+                type="button"
+                onClick={() => onEditStep(1)}
+                className="text-xs font-bold text-blue-600 hover:underline"
+              >
+                Modifier les choix
+              </button>
+            )}
           </div>
 
           <div className="divide-y divide-slate-100">
