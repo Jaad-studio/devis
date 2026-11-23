@@ -148,6 +148,7 @@ export function generateJaadQuotePdf(data: QuotePdfPayload): void {
 
   // Payment schedule bar
   let y = boxY + boxH + 7;
+  const hasCustomQuote = data.oneTimeItems.some((item) => Boolean(item.isCustomQuote));
   const deposit = Math.round(data.setupTotal * 0.3);
   const balance = data.setupTotal - deposit;
   doc.setFillColor(241, 245, 249);
@@ -159,7 +160,9 @@ export function generateJaadQuotePdf(data: QuotePdfPayload): void {
   doc.setFont('helvetica', 'normal');
   doc.setTextColor(51, 65, 85);
   doc.text(
-    `30 % à la commande (${fmtEuro(deposit)})  ·  70 % à la mise en ligne (${fmtEuro(balance)})`,
+    data.setupTotal === 0 && hasCustomQuote
+      ? 'Chiffrage sur mesure sous 24h  ·  Paiement habituel 30 % au lancement / 70 % à la livraison'
+      : `30 % à la commande (${fmtEuro(deposit)})  ·  70 % à la mise en ligne (${fmtEuro(balance)})`,
     margin + 42,
     y + 7.3
   );
@@ -207,9 +210,11 @@ export function generateJaadQuotePdf(data: QuotePdfPayload): void {
     doc.setFont('helvetica', 'bold');
     doc.setFontSize(9.5);
     doc.setTextColor(item.isMonthly ? 15 : 37, item.isMonthly ? 23 : 99, item.isMonthly ? 42 : 235);
-    const priceLabel = `${item.pricePrefix ? `${item.pricePrefix} ` : ''}${fmtEuro(item.price)}${
-      item.isMonthly ? '/mois' : ''
-    }`;
+    const priceLabel = item.isCustomQuote
+      ? 'Sur mesure'
+      : `${item.pricePrefix ? `${item.pricePrefix} ` : ''}${fmtEuro(item.price)}${
+          item.isMonthly ? '/mois' : ''
+        }`;
     doc.text(priceLabel, pageWidth - margin, y, { align: 'right' });
 
     doc.setFont('helvetica', 'normal');
@@ -264,13 +269,25 @@ export function generateJaadQuotePdf(data: QuotePdfPayload): void {
   doc.setFontSize(7.5);
   doc.setTextColor(148, 163, 184);
   doc.text('INVESTISSEMENT CRÉATION (NET À PAYER)', margin + 7, y + 8.5);
-  doc.setFontSize(20);
+  doc.setFontSize(data.setupTotal > 0 && hasCustomQuote ? 16 : 20);
   doc.setTextColor(255, 255, 255);
-  doc.text(fmtEuro(data.setupTotal), margin + 7, y + 18.5);
+  doc.text(
+    data.setupTotal === 0 && hasCustomQuote
+      ? 'Sur mesure'
+      : `${fmtEuro(data.setupTotal)}${hasCustomQuote ? ' + Sur mesure' : ''}`,
+    margin + 7,
+    y + 18.5
+  );
   doc.setFont('helvetica', 'normal');
   doc.setFontSize(7.5);
   doc.setTextColor(147, 197, 253);
-  doc.text(`Dont acompte 30 % à la commande : ${fmtEuro(deposit)}`, margin + 7, y + 24.5);
+  doc.text(
+    data.setupTotal === 0 && hasCustomQuote
+      ? 'Chiffrage personnalisé gratuit sous 24h'
+      : `Dont acompte 30 % à la commande : ${fmtEuro(deposit)}`,
+    margin + 7,
+    y + 24.5
+  );
 
   if (data.monthlyTotal > 0) {
     doc.setFont('helvetica', 'bold');

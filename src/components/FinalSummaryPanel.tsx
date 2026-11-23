@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import {
   Check,
+  CheckCircle2,
   Clock,
   Download,
   Loader2,
@@ -12,7 +13,6 @@ import {
   RotateCcw,
   Send,
   ShieldCheck,
-  Sparkles,
   User,
 } from 'lucide-react';
 import {
@@ -62,7 +62,14 @@ export default function FinalSummaryPanel({
   );
   const [pdfNotice, setPdfNotice] = useState(false);
 
-  const oneTimeItems: ServiceOption[] = [baseOption, ...selectedAi, ...selectedBoosts];
+  const oneTimeItems: ServiceOption[] = [
+    ...(baseOption.price > 0 || (selectedAi.length === 0 && selectedBoosts.length === 0)
+      ? [baseOption]
+      : []),
+    ...selectedAi,
+    ...selectedBoosts,
+  ];
+  const hasCustomQuote = oneTimeItems.some((item) => Boolean(item.isCustomQuote));
   const deposit = Math.round(setupTotal * 0.3);
   const timelineLabel =
     TIMELINE_CHOICES.find((item) => item.id === timeline)?.label || 'À définir';
@@ -106,13 +113,22 @@ export default function FinalSummaryPanel({
     const itemsText = oneTimeItems
       .map(
         (item) =>
-          `• ${item.label} (${item.pricePrefix ? `${item.pricePrefix} ` : ''}${formatEuro(item.price)})`
+          `• ${item.label} (${
+            item.isCustomQuote
+              ? 'Sur mesure'
+              : `${item.pricePrefix ? `${item.pricePrefix} ` : ''}${formatEuro(item.price)}`
+          })`
       )
       .join('\n');
     const careLine =
       careOption.price > 0
         ? `• Suivi mensuel : ${careOption.label} (${formatEuro(careOption.price)}/mois)`
         : '• Suivi mensuel : Aucun abonnement';
+
+    const totalLine =
+      setupTotal === 0 && hasCustomQuote
+        ? 'Total Création : Sur mesure (chiffrage sous 24h)'
+        : `Total Création : ${formatEuro(setupTotal)}${hasCustomQuote ? ' + Sur mesure' : ''} (Acompte 30 % : ${formatEuro(deposit)})`;
 
     const message = [
       `Bonjour Jâd (JAAD Studio), voici ma simulation de devis :`,
@@ -125,7 +141,7 @@ export default function FinalSummaryPanel({
       itemsText,
       careLine,
       '',
-      `Total Création : ${formatEuro(setupTotal)} (Acompte 30 % : ${formatEuro(deposit)})`,
+      totalLine,
       monthlyTotal > 0 ? `Abonnement : ${formatEuro(monthlyTotal)}/mois` : null,
       combinedBrief ? `\nPrécisions : ${combinedBrief}` : null,
     ]
@@ -149,7 +165,9 @@ export default function FinalSummaryPanel({
 
     setSending(true);
     const optionsList = [
-      ...oneTimeItems.map((o) => `${o.label} (${formatEuro(o.price)})`),
+      ...oneTimeItems.map(
+        (o) => `${o.label} (${o.isCustomQuote ? 'Sur mesure' : formatEuro(o.price)})`
+      ),
       careOption.price > 0 ? `${careOption.label} (${formatEuro(careOption.price)}/m)` : null,
     ]
       .filter(Boolean)
@@ -205,7 +223,7 @@ export default function FinalSummaryPanel({
           <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
             <div className="space-y-2">
               <span className="inline-flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-[0.2em] text-blue-400">
-                <Sparkles className="w-3.5 h-3.5" />
+                <CheckCircle2 className="w-3.5 h-3.5" />
                 Votre Devis Personnalisé est Prêt
               </span>
               <h2 className="font-display text-3xl sm:text-4xl font-black tracking-tight">
@@ -221,8 +239,11 @@ export default function FinalSummaryPanel({
                 Total Création (Net)
               </div>
               <div className="font-display text-4xl font-extrabold text-white mt-0.5">
-                {formatEuro(setupTotal)}
+                {setupTotal === 0 && hasCustomQuote ? 'Sur mesure' : formatEuro(setupTotal)}
               </div>
+              {setupTotal > 0 && hasCustomQuote && (
+                <div className="text-xs font-bold text-blue-300 mt-0.5">+ Sur mesure</div>
+              )}
               {monthlyTotal > 0 && (
                 <div className="text-sm font-bold text-blue-400 mt-1">
                   + {formatEuro(monthlyTotal)} / mois
@@ -269,8 +290,14 @@ export default function FinalSummaryPanel({
                   <div className="text-xs text-slate-500 mt-0.5">{item.concreteGain}</div>
                 </div>
                 <span className="text-sm font-extrabold text-blue-600 shrink-0">
-                  {item.pricePrefix ? `${item.pricePrefix} ` : ''}
-                  {formatEuro(item.price)}
+                  {item.isCustomQuote ? (
+                    'Sur mesure'
+                  ) : (
+                    <>
+                      {item.pricePrefix ? `${item.pricePrefix} ` : ''}
+                      {formatEuro(item.price)}
+                    </>
+                  )}
                 </span>
               </div>
             ))}

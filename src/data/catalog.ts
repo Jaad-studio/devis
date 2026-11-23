@@ -20,6 +20,7 @@ export interface ServiceOption {
   shortLabel?: string;
   price: number;
   isMonthly?: boolean;
+  isCustomQuote?: boolean;
   pricePrefix?: string;
   badge?: string;
   pitch: string;
@@ -203,7 +204,7 @@ export const BASE_OPTIONS: ServiceOption[] = [
       '100 % à vous (aucune location mensuelle obligatoire)',
     ],
     deliveryDays: 12,
-    iconName: 'Sparkles',
+    iconName: 'Globe',
     scores: { brand: 75, google: 70, automation: 25 },
   },
   {
@@ -326,7 +327,7 @@ export const AI_OPTIONS: ServiceOption[] = [
       'Simple à utiliser même sans rien connaître à l’IA',
     ],
     deliveryDays: 6,
-    iconName: 'Wand2',
+    iconName: 'PenTool',
     scores: { brand: 10, google: 30, automation: 40 },
   },
   {
@@ -407,6 +408,27 @@ export const AI_OPTIONS: ServiceOption[] = [
     iconName: 'Cpu',
     scores: { brand: 20, google: 10, automation: 70 },
   },
+  {
+    id: 'outil-ia-personnalise',
+    category: 'ai',
+    label: 'Outil IA ou Application Interne 100 % Personnalisé',
+    price: 0,
+    isCustomQuote: true,
+    badge: '100 % Sur-mesure',
+    requiresAppointment: true,
+    pitch:
+      'Vous avez une idée précise ou un besoin propre à votre métier qui ne rentre pas dans une case ? On conçoit et développe votre outil IA exactement selon votre façon de travailler.',
+    concreteGain:
+      'Ex concret : Connexion à votre logiciel métier, outil d’analyse de plans ou documents, assistant interne spécialisé ou automatisation sur-mesure.',
+    includes: [
+      'Échange gratuit de 20 min pour bien comprendre votre besoin',
+      'Chiffrage précis et transparent envoyé sous 24h',
+      'Conception 100 % adaptée à votre entreprise & vos équipes',
+    ],
+    deliveryDays: 10,
+    iconName: 'Settings2',
+    scores: { brand: 20, google: 5, automation: 75 },
+  },
 ];
 
 export const BOOST_OPTIONS: ServiceOption[] = [
@@ -445,7 +467,7 @@ export const BOOST_OPTIONS: ServiceOption[] = [
       'Étude de publicité sur les moteurs IA si vous le souhaitez',
     ],
     deliveryDays: 4,
-    iconName: 'Sparkles',
+    iconName: 'Compass',
     scores: { brand: 15, google: 35, automation: 20 },
   },
   {

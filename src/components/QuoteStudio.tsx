@@ -7,14 +7,15 @@ import {
   ArrowUpRight,
   Bot,
   Check,
+  CheckCircle2,
   ChevronDown,
   ChevronUp,
   Clock,
+  Compass,
   Cpu,
   Plus,
   RotateCcw,
   Sliders,
-  Sparkles,
   X,
 } from 'lucide-react';
 import {
@@ -111,7 +112,7 @@ function SelectableCard({ option, selected, darkTheme = false, onToggle }: Selec
             {option.label}
           </h3>
           <div className="flex items-baseline gap-1.5 mt-1.5">
-            {option.pricePrefix && (
+            {!option.isCustomQuote && option.pricePrefix && (
               <span
                 className={`text-xs font-bold uppercase ${
                   darkTheme ? 'text-blue-300' : 'text-blue-600'
@@ -131,9 +132,9 @@ function SelectableCard({ option, selected, darkTheme = false, onToggle }: Selec
                     : 'text-slate-900'
               }`}
             >
-              {formatEuro(option.price)}
+              {option.isCustomQuote ? 'Sur mesure' : formatEuro(option.price)}
             </span>
-            {option.isMonthly && (
+            {option.isMonthly && !option.isCustomQuote && (
               <span className={`text-xs font-bold ${darkTheme ? 'text-slate-400' : 'text-slate-500'}`}>
                 / mois
               </span>
@@ -398,6 +399,7 @@ export default function QuoteStudio() {
 
   const deposit = Math.round(setupTotal * 0.3);
   const balance = setupTotal - deposit;
+  const hasCustomQuote = selectedAi.some((item) => Boolean(item.isCustomQuote));
 
   return (
     <div className="min-h-screen flex flex-col relative pb-24 lg:pb-14">
@@ -556,7 +558,7 @@ export default function QuoteStudio() {
             <div className="space-y-4">
               <div className="flex flex-wrap items-center justify-between gap-2">
                 <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-blue-50 border border-blue-100 text-blue-700 text-[11px] font-extrabold uppercase tracking-wider">
-                  <Sparkles className="w-3.5 h-3.5" />
+                  <Compass className="w-3.5 h-3.5" />
                   4 questions simples · Tarif clair et immédiat
                 </div>
                 <span className="text-xs font-extrabold text-slate-500">
@@ -694,9 +696,13 @@ export default function QuoteStudio() {
                             }))
                           }
                           className={`group relative text-left rounded-2xl p-4 sm:p-5 border-2 transition-all flex items-start gap-3.5 ${
+                            choice.id === 'outil-ia-personnalise' ? 'sm:col-span-2 ' : ''
+                          }${
                             active
                               ? 'border-blue-600 bg-blue-50/50 shadow-sm'
-                              : 'border-slate-200 hover:border-blue-400 bg-white'
+                              : choice.id === 'outil-ia-personnalise'
+                                ? 'border-slate-300 hover:border-blue-500 bg-slate-50/70'
+                                : 'border-slate-200 hover:border-blue-400 bg-white'
                           }`}
                         >
                           <div
@@ -1017,7 +1023,7 @@ export default function QuoteStudio() {
                 <div className="space-y-3 max-w-2xl">
                   <div className="flex flex-wrap items-center gap-3">
                     <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-600/25 border border-blue-400/30 text-[11px] font-extrabold uppercase tracking-wider text-blue-300">
-                      <Sparkles className="w-3.5 h-3.5" />
+                      <CheckCircle2 className="w-3.5 h-3.5" />
                       Voici la solution que nous vous conseillons
                     </span>
                     <button
@@ -1050,12 +1056,23 @@ export default function QuoteStudio() {
                         Total à la création
                       </div>
                       <div className="font-display text-3xl sm:text-4xl font-black text-white mt-0.5">
-                        <AnimatedEuro value={setupTotal} />
-                        {(baseOption.pricePrefix ||
-                          selectedAi.some((a) => Boolean(a.pricePrefix))) && (
-                          <span className="text-blue-400 text-xl ml-1">+</span>
+                        {setupTotal === 0 && hasCustomQuote ? (
+                          <span>Sur mesure</span>
+                        ) : (
+                          <>
+                            <AnimatedEuro value={setupTotal} />
+                            {(baseOption.pricePrefix ||
+                              selectedAi.some((a) => Boolean(a.pricePrefix))) && (
+                              <span className="text-blue-400 text-xl ml-1">+</span>
+                            )}
+                          </>
                         )}
                       </div>
+                      {setupTotal > 0 && hasCustomQuote && (
+                        <div className="text-xs font-bold text-blue-300 mt-0.5">
+                          + Outil IA personnalisé (sur mesure)
+                        </div>
+                      )}
                     </div>
                     <span className="inline-flex items-center gap-1 text-[11px] font-bold bg-white/10 px-2.5 py-1 rounded-full text-slate-200">
                       <Clock className="w-3 h-3 text-blue-400" />
@@ -1064,14 +1081,23 @@ export default function QuoteStudio() {
                   </div>
 
                   <div className="pt-2.5 border-t border-white/10 space-y-1 text-xs text-slate-300">
-                    <div className="flex justify-between">
-                      <span>Payé en 2 fois (30 % au lancement) :</span>
-                      <strong className="text-white">{formatEuro(deposit)}</strong>
-                    </div>
-                    <div className="flex justify-between">
-                      <span>Solde à la livraison (70 %) :</span>
-                      <strong className="text-white">{formatEuro(balance)}</strong>
-                    </div>
+                    {setupTotal === 0 && hasCustomQuote ? (
+                      <div className="flex justify-between">
+                        <span>Tarif &amp; échéancier :</span>
+                        <strong className="text-white">Chiffrage sur mesure sous 24h</strong>
+                      </div>
+                    ) : (
+                      <>
+                        <div className="flex justify-between">
+                          <span>Payé en 2 fois (30 % au lancement) :</span>
+                          <strong className="text-white">{formatEuro(deposit)}</strong>
+                        </div>
+                        <div className="flex justify-between">
+                          <span>Solde à la livraison (70 %) :</span>
+                          <strong className="text-white">{formatEuro(balance)}</strong>
+                        </div>
+                      </>
+                    )}
                     <div className="flex justify-between pt-1 border-t border-white/10">
                       <span>Suivi mensuel :</span>
                       <strong className="text-blue-300">
@@ -1142,11 +1168,17 @@ export default function QuoteStudio() {
 
                           <div className="text-right shrink-0">
                             <div className="font-display font-black text-xl text-blue-700">
-                              {item.pricePrefix ? `${item.pricePrefix} ` : ''}
-                              {formatEuro(item.price)}
+                              {item.isCustomQuote ? (
+                                'Sur mesure'
+                              ) : (
+                                <>
+                                  {item.pricePrefix ? `${item.pricePrefix} ` : ''}
+                                  {formatEuro(item.price)}
+                                </>
+                              )}
                             </div>
                             <div className="text-[10px] font-semibold text-slate-500">
-                              ~{item.deliveryDays} jours
+                              {item.isCustomQuote ? 'Chiffrage 24h' : `~${item.deliveryDays} jours`}
                             </div>
                           </div>
                         </div>
@@ -1227,7 +1259,9 @@ export default function QuoteStudio() {
                               </div>
                               <div className="text-right shrink-0 space-y-1.5">
                                 <div className="font-display font-black text-sm text-slate-900">
-                                  {opt.pricePrefix ? `${opt.pricePrefix} ` : ''}+{formatEuro(opt.price)}
+                                  {opt.isCustomQuote
+                                    ? 'Sur mesure'
+                                    : `${opt.pricePrefix ? `${opt.pricePrefix} ` : ''}+${formatEuro(opt.price)}`}
                                 </div>
                                 <button
                                   type="button"
@@ -1390,7 +1424,7 @@ export default function QuoteStudio() {
             {presetBanner && stepIndex > 0 && stepIndex < 5 && (
               <div className="mb-6 bg-blue-50 border border-blue-200/80 text-blue-900 px-4 py-3 rounded-2xl text-xs font-semibold flex flex-wrap items-center justify-between gap-2">
                 <span className="flex items-center gap-2">
-                  <Sparkles className="w-4 h-4 text-blue-600 shrink-0" />
+                  <CheckCircle2 className="w-4 h-4 text-blue-600 shrink-0" />
                   {presetBanner}
                 </span>
                 <button

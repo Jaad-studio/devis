@@ -3,10 +3,10 @@
 import React, { useEffect, useRef, useState } from 'react';
 import {
   ArrowRight,
+  Calculator,
   ChevronUp,
   Clock,
   FileText,
-  Sparkles,
   X,
 } from 'lucide-react';
 import type { ServiceOption } from '@/data/catalog';
@@ -84,6 +84,7 @@ export default function LiveQuoteSidebar({
   const [mobileOpen, setMobileOpen] = useState(false);
 
   const deposit = Math.round(setupTotal * 0.3);
+  const hasCustomQuote = selectedAi.some((item) => Boolean(item.isCustomQuote));
   const hasAppointmentItem =
     Boolean(baseOption.requiresAppointment) ||
     selectedAi.some((item) => item.requiresAppointment);
@@ -102,7 +103,7 @@ export default function LiveQuoteSidebar({
           <div className="bg-slate-900 text-white px-6 py-5">
             <div className="flex items-center justify-between gap-2">
               <span className="inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-[0.2em] text-blue-400">
-                <Sparkles className="w-3.5 h-3.5" />
+                <Calculator className="w-3.5 h-3.5" />
                 Estimation en direct
               </span>
               <span className="inline-flex items-center gap-1 text-[11px] font-medium text-slate-300 bg-white/10 px-2.5 py-1 rounded-full">
@@ -117,8 +118,14 @@ export default function LiveQuoteSidebar({
                   Création du projet
                 </div>
                 <div className="font-display text-4xl font-extrabold tracking-tight text-white mt-0.5">
-                  <AnimatedEuro value={setupTotal} />
-                  {hasAppointmentItem && <span className="text-blue-400 text-2xl ml-1">+</span>}
+                  {setupTotal === 0 && hasCustomQuote ? (
+                    <span>Sur mesure</span>
+                  ) : (
+                    <>
+                      <AnimatedEuro value={setupTotal} />
+                      {hasAppointmentItem && <span className="text-blue-400 text-2xl ml-1">+</span>}
+                    </>
+                  )}
                 </div>
               </div>
 
@@ -190,8 +197,9 @@ export default function LiveQuoteSidebar({
                     <span className="font-semibold text-slate-700 truncate">{item.label}</span>
                     <div className="flex items-center gap-2 shrink-0">
                       <span className="font-bold text-slate-900">
-                        {item.pricePrefix ? `${item.pricePrefix} ` : ''}
-                        {formatEuro(item.price)}
+                        {item.isCustomQuote
+                          ? 'Sur mesure'
+                          : `${item.pricePrefix ? `${item.pricePrefix} ` : ''}${formatEuro(item.price)}`}
                       </span>
                       <button
                         type="button"
@@ -293,7 +301,9 @@ export default function LiveQuoteSidebar({
               {[...selectedAi, ...selectedBoosts].map((item) => (
                 <div key={item.id} className="flex justify-between text-xs py-1">
                   <span className="text-slate-700">{item.label}</span>
-                  <span className="font-bold">{formatEuro(item.price)}</span>
+                  <span className="font-bold">
+                    {item.isCustomQuote ? 'Sur mesure' : formatEuro(item.price)}
+                  </span>
                 </div>
               ))}
               {careOption.price > 0 && (
@@ -332,7 +342,7 @@ export default function LiveQuoteSidebar({
               </div>
               <div className="flex items-baseline gap-1.5">
                 <span className="font-display text-xl font-extrabold text-slate-900">
-                  <AnimatedEuro value={setupTotal} />
+                  {setupTotal === 0 && hasCustomQuote ? 'Sur mesure' : <AnimatedEuro value={setupTotal} />}
                 </span>
                 {monthlyTotal > 0 && (
                   <span className="text-xs font-bold text-blue-600">

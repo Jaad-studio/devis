@@ -6,7 +6,8 @@ export type AiChoiceId =
   | 'assistant-ia-247'
   | 'auto-workflow-ia'
   | 'app-interne-ia'
-  | 'systeme-multi-agents';
+  | 'systeme-multi-agents'
+  | 'outil-ia-personnalise';
 
 export type SiteNeedId =
   | 'deja-site'
@@ -94,7 +95,7 @@ export const FOCUS_CHOICES: QuizChoice<FocusAnswer>[] = [
     title: 'Un Site Internet Pro + Des Outils IA pour automatiser et attirer des clients',
     description:
       'La totale : une vraie vitrine ou boutique moderne qui attire des clients + des outils IA qui travaillent pour moi.',
-    iconName: 'Sparkles',
+    iconName: 'Layers',
     tag: 'Le duo gagnant',
   },
   {
@@ -120,7 +121,7 @@ export const AI_DIAGNOSTIC_CHOICES: QuizChoice<AiChoiceId>[] = [
     title: 'Une App Interne IA qui rédige mes textes Google & posts réseaux en 2 clics',
     description:
       'Ex concret : Vous mettez une photo de chantier ou produit → l’application écrit le texte parfait toute seule.',
-    iconName: 'Wand2',
+    iconName: 'PenTool',
     tag: '490 €',
   },
   {
@@ -155,6 +156,14 @@ export const AI_DIAGNOSTIC_CHOICES: QuizChoice<AiChoiceId>[] = [
     iconName: 'Cpu',
     tag: 'Dès 1 290 € · Sur-mesure',
   },
+  {
+    id: 'outil-ia-personnalise',
+    title: 'Autre besoin : un Outil IA ou une Application 100 % Personnalisée',
+    description:
+      'Ex concret : Vous avez une idée précise ou un besoin propre à votre métier ? Expliquez-nous votre idée et on crée l’outil sur-mesure.',
+    iconName: 'Settings2',
+    tag: 'Sur mesure',
+  },
 ];
 
 export const SITE_NEED_CHOICES: QuizChoice<SiteNeedId>[] = [
@@ -187,7 +196,7 @@ export const SITE_NEED_CHOICES: QuizChoice<SiteNeedId>[] = [
     title: 'Un Site Complet (plusieurs pages) pour montrer mes services, photos & avis',
     description:
       'Le format idéal pour rassurer les clients et recevoir des demandes de devis qualifiées.',
-    iconName: 'Sparkles',
+    iconName: 'Globe',
     tag: 'Le plus demandé · 890 €',
   },
   {
@@ -234,7 +243,7 @@ export const BOOST_DIAGNOSTIC_CHOICES: QuizChoice<BoostChoiceId>[] = [
     title: 'Être recommandé par ChatGPT quand un client cherche mon métier',
     description:
       'Quand quelqu’un demande un bon pro sur ChatGPT ou Perplexity, votre nom ressort.',
-    iconName: 'Sparkles',
+    iconName: 'Compass',
     tag: '+390 € · Nouveau',
   },
   {
