@@ -194,7 +194,7 @@ export default function QuoteStudio() {
   const [selectedGoalId, setSelectedGoalId] = useState<string>('artisan-local');
   const [baseId, setBaseId] = useState<string>('vitrine-impact');
   const [aiIds, setAiIds] = useState<string[]>([]);
-  const [boostIds, setBoostIds] = useState<string[]>(['seo-google']);
+  const [boostIds, setBoostIds] = useState<string[]>([]);
   const [careId, setCareId] = useState<string>('maint-essentielle');
   const [presetBanner, setPresetBanner] = useState<string | null>(null);
 
@@ -291,7 +291,6 @@ export default function QuoteStudio() {
           ...prev,
           focus,
           siteNeed: prev.siteNeed === 'deja-site' ? 'vitrine-impact' : prev.siteNeed,
-          boostChoices: prev.boostChoices.length === 0 ? ['seo-google'] : prev.boostChoices,
           care: 'maint-essentielle',
         };
       }
@@ -300,7 +299,6 @@ export default function QuoteStudio() {
         focus,
         aiChoices: [],
         siteNeed: prev.siteNeed === 'deja-site' ? 'vitrine-impact' : prev.siteNeed,
-        boostChoices: prev.boostChoices.length === 0 ? ['seo-google'] : prev.boostChoices,
         care: 'maint-essentielle',
       };
     });
@@ -346,7 +344,7 @@ export default function QuoteStudio() {
     setSelectedGoalId('artisan-local');
     setBaseId('vitrine-impact');
     setAiIds([]);
-    setBoostIds(['seo-google']);
+    setBoostIds([]);
     setCareId('maint-essentielle');
     setPresetBanner(null);
     setStepIndex(0);
@@ -1356,7 +1354,7 @@ export default function QuoteStudio() {
                   </p>
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
                   {CARE_OPTIONS.map((opt) => {
                     const active = careId === opt.id;
                     return (

@@ -20,7 +20,6 @@ export type SiteNeedId =
   | 'webapp-saas';
 
 export type BoostChoiceId =
-  | 'seo-google'
   | 'geo-ia'
   | 'sea-ads'
   | 'media-drone'
@@ -32,6 +31,7 @@ export type CareChoiceId =
   | 'aucun-abo'
   | 'maint-essentielle'
   | 'maint-active'
+  | 'seo-mensuel'
   | 'croissance-seo-ia';
 
 export interface DiagnosticAnswers {
@@ -54,7 +54,7 @@ export const DEFAULT_ANSWERS: DiagnosticAnswers = {
   focus: 'site-and-ai',
   aiChoices: [],
   siteNeed: 'vitrine-impact',
-  boostChoices: ['seo-google'],
+  boostChoices: [],
   care: 'maint-essentielle',
 };
 
@@ -231,14 +231,6 @@ export const SITE_NEED_CHOICES: QuizChoice<SiteNeedId>[] = [
 
 export const BOOST_DIAGNOSTIC_CHOICES: QuizChoice<BoostChoiceId>[] = [
   {
-    id: 'seo-google',
-    title: 'Être placé en haut de Google dans ma ville (Référencement Google)',
-    description:
-      'Pour que les clients autour de vous tombent sur votre entreprise sans payer de pub à chaque clic.',
-    iconName: 'Search',
-    tag: '+290 €',
-  },
-  {
     id: 'geo-ia',
     title: 'Être recommandé par ChatGPT quand un client cherche mon métier',
     description:
@@ -310,12 +302,20 @@ export const CARE_DIAGNOSTIC_CHOICES: QuizChoice<CareChoiceId>[] = [
     tag: '99 €/mois · Pratique',
   },
   {
-    id: 'croissance-seo-ia',
-    title: 'Suivi complet : mises à jour + nouveaux contenus Google chaque mois (189 €/mois)',
+    id: 'seo-mensuel',
+    title: 'Suivi SEO Mensuel pour monter sur Google chaque mois (149 €/mois)',
     description:
-      'Mises à jour illimitées + travail régulier pour monter sur Google et ajuster vos outils IA.',
+      'Rédaction d’articles locaux, optimisation Google Business et suivi de vos positions chaque mois.',
+    iconName: 'Search',
+    tag: '149 €/mois · SEO',
+  },
+  {
+    id: 'croissance-seo-ia',
+    title: 'Suivi complet : SEO Google + mises à jour WhatsApp + IA (189 €/mois)',
+    description:
+      'Mises à jour illimitées + travail SEO mensuel sur Google + optimisation continue de vos outils IA.',
     iconName: 'TrendingUp',
-    tag: '189 €/mois',
+    tag: '189 €/mois · Complet',
   },
 ];
 
@@ -345,11 +345,7 @@ export function computeRecommendation(
       ? ['mini-app']
       : answers.aiChoices;
 
-  // Avoid double-charging SEO local when they picked the standalone Google Maps fiche at 290 €
-  const boostIds: BoostChoiceId[] =
-    baseId === 'gmb-pack'
-      ? answers.boostChoices.filter((b) => b !== 'seo-google')
-      : answers.boostChoices;
+  const boostIds: BoostChoiceId[] = answers.boostChoices;
 
   const hasSite = baseId !== 'deja-site';
   const hasAi = aiIds.length > 0;

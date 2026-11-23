@@ -63,8 +63,8 @@ export const BUSINESS_GOALS: BusinessGoalPreset[] = [
     exampleTag: 'Ex : Garage auto, couvreur, salon, restaurant',
     baseId: 'vitrine-impact',
     aiIds: [],
-    boostIds: ['seo-google'],
-    careId: 'maint-essentielle',
+    boostIds: [],
+    careId: 'seo-mensuel',
     iconName: 'Wrench',
   },
   {
@@ -75,8 +75,8 @@ export const BUSINESS_GOALS: BusinessGoalPreset[] = [
     exampleTag: 'Ex : Cuisiniste, architecte, immobilier, B2B',
     baseId: 'vitrine-pro',
     aiIds: ['mini-app'],
-    boostIds: ['seo-google'],
-    careId: 'maint-essentielle',
+    boostIds: [],
+    careId: 'seo-mensuel',
     iconName: 'Building2',
   },
   {
@@ -87,7 +87,7 @@ export const BUSINESS_GOALS: BusinessGoalPreset[] = [
     exampleTag: 'Ex : Marque produit, concept store, prêt-à-porter',
     baseId: 'ecommerce-cle',
     aiIds: ['studio-contenu-ia'],
-    boostIds: ['seo-google'],
+    boostIds: [],
     careId: 'maint-active',
     iconName: 'ShoppingBag',
   },
@@ -433,25 +433,6 @@ export const AI_OPTIONS: ServiceOption[] = [
 
 export const BOOST_OPTIONS: ServiceOption[] = [
   {
-    id: 'seo-google',
-    category: 'boost',
-    label: 'Sortir en haut de Google dans votre ville (Référencement Local)',
-    price: 290,
-    badge: 'Recommandé',
-    pitch:
-      'On optimise chaque texte et votre fiche locale pour que les clients qui cherchent votre métier autour de vous tombent sur vous en premier.',
-    concreteGain:
-      'Ex concret : Plus d’appels de clients locaux sans payer de publicité à chaque clic.',
-    includes: [
-      'Pages & titres ciblés sur vos services et votre ville',
-      'Optimisation de votre Fiche Google Business',
-      'Méthode simple pour recueillir plus d’avis 5 étoiles',
-    ],
-    deliveryDays: 4,
-    iconName: 'Search',
-    scores: { brand: 5, google: 40, automation: 5 },
-  },
-  {
     id: 'geo-ia',
     category: 'boost',
     label: 'Être recommandé par ChatGPT & les IA quand un client cherche votre métier',
@@ -616,22 +597,41 @@ export const CARE_OPTIONS: ServiceOption[] = [
     scores: { brand: 15, google: 25, automation: 25 },
   },
   {
+    id: 'seo-mensuel',
+    category: 'care',
+    label: 'Suivi SEO Mensuel (Monter sur Google chaque mois)',
+    price: 149,
+    isMonthly: true,
+    badge: 'Référencement Google',
+    pitch:
+      'Travail SEO continu chaque mois : rédaction d’articles et pages ciblées sur votre ville, optimisation de votre Fiche Google Business et suivi de vos positions.',
+    concreteGain: 'Vous grimpez durablement devant vos concurrents sur Google sans payer de pub au clic.',
+    includes: [
+      'Tout le suivi technique & hébergement inclus',
+      'Nouveaux articles & pages locales chaque mois',
+      'Suivi mensuel de vos positions sur Google & Maps',
+    ],
+    deliveryDays: 0,
+    iconName: 'Search',
+    scores: { brand: 10, google: 45, automation: 10 },
+  },
+  {
     id: 'croissance-seo-ia',
     category: 'care',
-    label: 'Suivi Complet : Mises à jour + Nouveaux textes Google chaque mois',
+    label: 'Suivi Complet : SEO Google + Mises à jour WhatsApp + IA',
     price: 189,
     isMonthly: true,
     pitch:
-      'Mises à jour illimitées + rédaction mensuelle de contenus locaux pour monter sur Google et amélioration continue de vos outils IA.',
-    concreteGain: 'Votre visibilité et vos outils IA gagnent en efficacité mois après mois.',
+      'La totale chaque mois : mises à jour illimitées par WhatsApp + travail SEO mensuel pour monter sur Google + amélioration continue de vos outils IA.',
+    concreteGain: 'Votre site, votre visibilité Google et vos outils IA progressent chaque mois.',
     includes: [
-      'Tout le suivi WhatsApp inclus',
+      'Tout le suivi WhatsApp + Suivi SEO mensuel inclus',
       'Nouveaux articles / pages ciblées pour grimper sur Google',
       'Ajustements mensuels de vos outils et assistants IA',
     ],
     deliveryDays: 0,
     iconName: 'TrendingUp',
-    scores: { brand: 20, google: 40, automation: 35 },
+    scores: { brand: 20, google: 50, automation: 35 },
   },
 ];
 
